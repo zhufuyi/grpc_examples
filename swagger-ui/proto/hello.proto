@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package proto;
+
+// 这里导入的annotations.proto文件在$GOPATH/bin/include目录下
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package="./hellopb";
+
+
+// 生成*.swagger.json文件的一些默认设置
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "2.0";
+  };
+  // 显示扩展文档
+  external_docs: {
+    url: "https://zhuyasen.com";
+    description: "博客";
+  }
+  // 默认为HTTPS，根据实际需要设置
+  schemes: HTTP;
+};
+
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {
+    option (google.api.http) = {
+      post: "/v1/sayHello"
+      body: "*"
+    };
+  }
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

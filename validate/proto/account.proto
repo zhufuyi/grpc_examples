@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package proto;
+
+import "validate/validate.proto";
+
+// userpb是生成代码的包名称，必须包含.或/字符，最后字符为包名
+option go_package = "./hellopb";
+
+service Account {
+    rpc Login (LoginRequest) returns (LoginReply) {}
+}
+
+message LoginRequest {
+    string email = 1 [(validate.rules).string.email = true]; // 校验email字段
+    string password = 2 [(validate.rules).string = { // 密码必须是数字，最大16位
+        pattern:   "^[0-9]*$",
+        max_bytes: 16,
+    }];
+}
+
+message LoginReply {
+    string token = 1;
+}

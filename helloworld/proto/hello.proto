@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package proto;
+
+// userpb是生成代码的包名称，必须包含.或/字符，最后字符为包名
+option go_package = "./hellopb";
+
+service Greeter {
+    // 一元RPC
+    rpc UnarySayHello (HelloRequest) returns (HelloReply) {}
+    // 服务端流式RPC
+    rpc ServerStreamingSayHello (HelloRequest) returns (stream HelloReply) {}
+    // 客户端流式RPC
+    rpc ClientStreamingSayHello (stream HelloRequest) returns (HelloReply) {}
+    // 双向流式RPC
+    rpc BidirectionalStreamingSayHello (stream HelloRequest) returns (stream HelloReply) {}
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}

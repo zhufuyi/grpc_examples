@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto;
+
+// userpb是生成代码的包名称，必须包含.或/字符，最后字符为包名
+option go_package = "./userpb";
+
+// User 消息名称，第一个字母大写
+message User {
+    // 字段使用小写或下划线
+    int64  id = 1;
+    string name = 2;
+    string email = 3;
+}

@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package proto;
+
+// 把google/api/annotations.proto和protoc-gen-openapiv2/options/annotations.proto文件存放在protoc的同级目录include下
+// protoc默认从同级目录include下查找
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// 设置生成*go的包名
+option go_package = "./accountpb";
+
+
+// 生成*.swagger.json文件的一些默认设置
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "2.0";
+  };
+
+  // 默认为HTTPS，根据实际需要设置
+  schemes: HTTPS;
+
+  // 在swagger设置全局authorization
+  security_definitions: {
+    security: {
+     // key: "bearer"
+      key: "Bearer"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "authorization"
+        description: "Authentication token, prefixed by Bearer: Bearer <token>"
+      }
+    }
+  }
+
+  security: {
+    security_requirement: {
+     // key: "bearer"
+      key: "Bearer"
+    }
+  }
+
+  // 显示扩展文档
+  external_docs: {
+    url: "https://zhuyasen.com";
+    description: "博客";
+  }
+
+};
+
+service Account {
+  rpc Register (RegisterRequest) returns (RegisterReply) {
+    // web设置
+    option (google.api.http) = {
+      post: "/v1/user/register",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "注册用户",
+      description: "register one User",
+      tags: "registerUser",
+    };
+  }
+
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    // web设置
+    option (google.api.http) = {
+      get: "/v1/getUser"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "获取用户信息",
+      description: "get one user info",
+      tags: "getUser",
+      // security : { } // 禁用安全密钥
+    };
+
+  }
+}
+
+message RegisterRequest {
+  string name = 1;
+  string password = 2;
+}
+
+message RegisterReply {
+  int64 id =1;
+  string token = 2;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserReply {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
