@@ -38,6 +38,7 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [metadata set and read](metadata)
 - [interceptor](interceptor)
 - [keepalive](keepalive)
+- [timeout](timeout)
 - [recovery](recovery)
 - [swagger-ui](swagger-ui)
 - [validate](validate)
@@ -54,16 +55,3 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [waitForReady](waitForReady)
 
 <br>
-
-### gogo protobuf
-
-```bash
-go install github.com/gogo/protobuf/protoc-gen-gofast@v1.3.2
-go install github.com/gogo/protobuf/protoc-gen-gogofast@v1.3.2
-go install github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.2
-go install github.com/gogo/protobuf/protoc-gen-gogoslick@v1.3.2
-
-go get github.com/gogo/protobuf/proto@v1.3.2
-go get github.com/gogo/protobuf/{binary}@v1.3.2
-go get github.com/gogo/protobuf/gogoproto@v1.3.2
-```
