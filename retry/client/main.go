@@ -30,13 +30,12 @@ func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
 	// 禁用tls
-	grpc.WithTransportCredentials(insecure.NewCredentials())
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// 重试
 	option := grpc.WithUnaryInterceptor(
 		grpc_middleware.ChainUnaryClient(
-			middleware.Retry(), // 可以修改默认重试次数、重试时间间隔、触发重试错误码
+			middleware.UnaryClientRetry(), // 可以修改默认重试次数、重试时间间隔、触发重试错误码
 		),
 	)
 	options = append(options, option)

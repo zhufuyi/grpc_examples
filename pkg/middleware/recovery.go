@@ -9,8 +9,8 @@ import (
 
 // ---------------------------------- server interceptor ----------------------------------
 
-// Recovery 发生panic时恢复
-func Recovery() grpc.UnaryServerInterceptor {
+// UnaryServerRecovery 发生panic时恢复
+func UnaryServerRecovery() grpc.UnaryServerInterceptor {
 	// https://pkg.go.dev/github.com/grpc-ecosystem/go-grpc-middleware/recovery
 	customFunc := func(p interface{}) (err error) {
 		return status.Errorf(codes.Internal, "panic triggered: %v", p)

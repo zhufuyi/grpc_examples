@@ -16,11 +16,11 @@ type GreeterServer struct {
 }
 
 func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
-	t:=reflect.TypeOf(*r)
+	t := reflect.TypeOf(*r)
 
-	for i:=0;i<t.NumField();i++{
-		sf:=t.Field(i)
-		fmt.Println(sf.Tag.Get("json"),sf.Tag.Get("gorm"),sf.Tag.Get("bson"))
+	for i := 0; i < t.NumField(); i++ {
+		sf := t.Field(i)
+		fmt.Println(sf.Tag.Get("json"), sf.Tag.Get("gorm"), sf.Tag.Get("bson"))
 	}
 
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
@@ -54,4 +54,3 @@ func main() {
 		panic(err)
 	}
 }
-

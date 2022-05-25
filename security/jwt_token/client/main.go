@@ -46,7 +46,6 @@ func getDialOptions(isUseTLS bool) []grpc.DialOption {
 
 	if !isUseTLS {
 		// 不使用加密传输
-		grpc.WithTransportCredentials(insecure.NewCredentials())
 		options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	} else {
 		// tls加密

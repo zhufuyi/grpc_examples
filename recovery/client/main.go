@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
-
 	pb "grpc_examples/recovery/proto/hellopb"
 
 	"google.golang.org/grpc"
@@ -33,6 +31,4 @@ func main() {
 	if err := sayHello(client); err != nil {
 		fmt.Println(err)
 	}
-
-	time.Sleep(time.Second)
 }

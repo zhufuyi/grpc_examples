@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+// ---------------------------------- server interceptor ----------------------------------
+
 var (
 	// 自定义打印kv
 	loggingFields = map[string]interface{}{}
@@ -30,8 +32,8 @@ func AddSkipLoggingMethods(methodNames ...string) {
 	}
 }
 
-// Logging 日志打印拦截器
-func ZapLogging(logger *zap.Logger) grpc.UnaryServerInterceptor {
+// UnaryServerZapLogging 日志打印拦截器
+func UnaryServerZapLogging(logger *zap.Logger) grpc.UnaryServerInterceptor {
 	if logger == nil {
 		logger, _ = zap.NewProduction()
 	}
@@ -64,7 +66,7 @@ func ZapLogging(logger *zap.Logger) grpc.UnaryServerInterceptor {
 	return grpc_zap.UnaryServerInterceptor(logger, zapOptions...)
 }
 
-// CtxFieldExtractor field extractor logging
-func CtxFieldExtractor() grpc.UnaryServerInterceptor {
+// UnaryServerCtxTags field extractor logging
+func UnaryServerCtxTags() grpc.UnaryServerInterceptor {
 	return grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor))
 }

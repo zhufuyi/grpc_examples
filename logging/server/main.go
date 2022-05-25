@@ -30,8 +30,8 @@ func getServerOptions() []grpc.ServerOption {
 	//middleware.AddLoggingFields(map[string]interface{}{"hello": "world"}) // 添加打印自定义字段
 	//middleware.AddSkipLoggingMethods("/proto.Greeter/SayHello") // 跳过打印调用的方法
 	options = append(options, grpc_middleware.WithUnaryServerChain(
-		middleware.CtxFieldExtractor(),
-		middleware.ZapLogging(logger),
+		middleware.UnaryServerCtxTags(),
+		middleware.UnaryServerZapLogging(logger),
 	))
 
 	return options

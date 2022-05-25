@@ -50,8 +50,8 @@ func JwtVerify(ctx context.Context) (context.Context, error) {
 	return newCtx, nil
 }
 
-// JwtAuth jwt认证拦截器
-func JwtAuth() grpc.UnaryServerInterceptor {
+// UnaryServerJwtAuth jwt认证拦截器
+func UnaryServerJwtAuth() grpc.UnaryServerInterceptor {
 	return grpc_auth.UnaryServerInterceptor(JwtVerify)
 }
 

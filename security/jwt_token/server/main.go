@@ -129,7 +129,7 @@ func getServerOptions(isUseTLS bool) []grpc.ServerOption {
 	}
 
 	// token鉴权
-	options = append(options, grpc.UnaryInterceptor(middleware.JwtAuth()))
+	options = append(options, grpc.UnaryInterceptor(middleware.UnaryServerJwtAuth()))
 
 	return options
 }

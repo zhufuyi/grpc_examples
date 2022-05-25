@@ -3,16 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"grpc_examples/pkg/middleware"
 	"net"
 	"time"
 
 	pb "grpc_examples/recovery/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GreeterServer struct {
@@ -28,15 +26,8 @@ func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 func getServerOptions() []grpc.ServerOption {
 	var options []grpc.ServerOption
 
-	// https://pkg.go.dev/github.com/grpc-ecosystem/go-grpc-middleware/recovery
-	customFunc := func(p interface{}) (err error) {
-		return status.Errorf(codes.Unknown, "panic triggered: %v", p)
-	}
-	opts := []grpc_recovery.Option{
-		grpc_recovery.WithRecoveryHandler(customFunc),
-	}
 	recoveryOption := grpc_middleware.WithUnaryServerChain(
-		grpc_recovery.UnaryServerInterceptor(opts...),
+		middleware.UnaryServerRecovery(),
 	)
 	options = append(options, recoveryOption)
 

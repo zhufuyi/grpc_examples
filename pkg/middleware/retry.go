@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-// ---------------------------------- client option ----------------------------------
+// ---------------------------------- client interceptor ----------------------------------
 
 var (
 	defaultTimes    uint = 3                                                                       // 重试次数
@@ -45,8 +45,8 @@ func SetRetryErrCodes(errCodes ...codes.Code) {
 	}
 }
 
-// Retry 重试
-func Retry() grpc.UnaryClientInterceptor {
+// UnaryClientRetry 重试
+func UnaryClientRetry() grpc.UnaryClientInterceptor {
 	return grpc_retry.UnaryClientInterceptor(
 		grpc_retry.WithMax(defaultTimes), // 设置重试次数
 		grpc_retry.WithBackoff(func(attempt uint) time.Duration { // 设置重试间隔
