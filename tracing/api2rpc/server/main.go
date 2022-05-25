@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"grpc_examples/pkg/tracer"
-	"grpc_examples/pkg/tracer/otgrpc"
 	pb "grpc_examples/tracing/api2rpc/proto/hellopb"
 
 	"github.com/opentracing/opentracing-go"
@@ -45,7 +44,7 @@ func getServerOptions() []grpc.ServerOption {
 
 	// 链路跟踪拦截器
 	options = append(options, grpc.UnaryInterceptor(
-		otgrpc.OpenTracingServerInterceptor(opentracing.GlobalTracer()),
+		tracer.UnaryServerTracing(),
 	))
 
 	return options

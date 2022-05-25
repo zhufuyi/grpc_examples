@@ -38,33 +38,3 @@ func InitJaeger(serviceName string, agentAddr string) (io.Closer, error) {
 
 	return closer, nil
 }
-
-//func InitZipkinTracer(serviceName string,rpcServerAddr, zipkinAddr string) (opentracing.Tracer, error) {
-//	// docker run -d -p 9411:9411 -p 9410:9410 openzipkin/zipkin
-//
-//	// create collector.
-//	//collector, err := zipkin.NewHTTPCollector("http://localhost:9411/api/v1/spans")
-//	collector, err := zipkin.NewHTTPCollector(zipkinAddr+"/api/v1/spans")
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	// create recorder.
-//	//recorder := zipkin.NewRecorder(collector, false, "127.0.0.1:50051", serviceName)
-//	recorder := zipkin.NewRecorder(collector, false, rpcServerAddr, serviceName)
-//
-//	// create tracer.
-//	tracer, err := zipkin.NewTracer(
-//		recorder,
-//		zipkin.ClientServerSameSpan(true),
-//		zipkin.TraceID128Bit(true),
-//	)
-//	if err != nil {
-//		nil, err
-//	}
-//
-//	// explicitly set our tracer to be the default tracer.
-//	//opentracing.InitGlobalTracer(tracer)
-//
-//	return tracer,nil
-//}

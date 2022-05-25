@@ -5,10 +5,8 @@ import (
 	"fmt"
 
 	"grpc_examples/pkg/tracer"
-	"grpc_examples/pkg/tracer/otgrpc"
 	pb "grpc_examples/tracing/api2rpc/proto/hellopb"
 
-	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -31,7 +29,7 @@ func getDialOptions() []grpc.DialOption {
 
 	// tracing跟踪
 	options = append(options, grpc.WithUnaryInterceptor(
-		otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer()),
+		tracer.UnaryClientTracing(),
 	))
 
 	return options
