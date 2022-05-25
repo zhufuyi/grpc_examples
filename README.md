@@ -41,6 +41,7 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [recovery](recovery)
 - [swagger-ui](swagger-ui)
 - [validate](validate)
+- [tag](tag)
 - [TLS server-side authentication and two-way authentication](security/tls)
 - [kv token authentication](security/kv_token)
 - [jwt token authentication](security/jwt_token)

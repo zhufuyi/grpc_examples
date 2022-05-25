@@ -22,7 +22,7 @@ var (
 )
 
 func sayHello(c *gin.Context) {
-	// tracer.GinCtx(c) 从gin的context提起链路跟踪字段，生成新的context
+	// tracer.GinCtx(c) 从gin的context获取tracing相关字段，生成新的context
 	// 调用rpc1
 	resp, err := helloClient.SayHello(tracer.GinCtx(c), &pb.HelloRequest{Name: "zhangsan"})
 	if err != nil {
