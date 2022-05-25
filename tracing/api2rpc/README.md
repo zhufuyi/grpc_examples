@@ -36,3 +36,7 @@ Open jaeger's UI in your browser `http://127.0.0.1:16686`
 Select **[service]** in the left menu bar and click on **[file trace]** to view the details, as shown below.
 
 ![api2grpc](api2rpc_tracing.jpg)
+
+<br>
+
+ OpenTracing Semantic Conventions https://github.com/opentracing/specification/blob/master/semantic_conventions.md

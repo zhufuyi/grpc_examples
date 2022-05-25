@@ -35,3 +35,7 @@ Select **[service]** in the left menu bar and click on **[file trace]** to view 
 
 
 ![api2grpc](rpc2rpc_tracing.jpg)
+
+<br>
+
+ OpenTracing Semantic Conventions https://github.com/opentracing/specification/blob/master/semantic_conventions.md
