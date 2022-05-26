@@ -53,5 +53,7 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [rpc-->rpc tracing](tracing/rpc2rpc)
 - [grpc-gateway api to gRPC](http2grpc)
 - [waitForReady](waitForReady)
+- [default grpc metrics](metrics/defaultMetrics)
+- [customized grpc metrics](metrics/customizedMetrics)
 
 <br>

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	pb "grpc_examples/prometheus/defaultMetrics/proto/hellopb"
+	pb "grpc_examples/metrics/defaultMetrics/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"

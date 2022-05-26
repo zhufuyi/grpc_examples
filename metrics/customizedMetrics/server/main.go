@@ -7,8 +7,8 @@ import (
 	"net"
 	"time"
 
+	pb "grpc_examples/metrics/customizedMetrics/proto/hellopb"
 	"grpc_examples/pkg/metrics/serverMetrics"
-	pb "grpc_examples/prometheus/customizedMetrics/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
@@ -56,7 +56,7 @@ func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 		time.Sleep(time.Millisecond * 255)
 	}
 
-	//counterMetricInc(ctx, customizedCounterMetric)
+	counterMetricInc(ctx, customizedCounterMetric)
 
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
@@ -74,8 +74,8 @@ func UnaryServerLabels(ctx context.Context, req interface{}, info *grpc.UnarySer
 func getServerOptions() []grpc.ServerOption {
 	var options []grpc.ServerOption
 
-	// prometheus metrics拦截器
-	serverMetrics.AddCounterMetrics(customizedCounterMetric) // 添加自定义拦截器
+	serverMetrics.AddCounterMetrics(customizedCounterMetric) // 添加自定义指标
+	// metrics拦截器
 	option := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 		//UnaryServerLabels,                  // 标签
 		serverMetrics.UnaryServerMetrics(), // 一元rpc的metrics拦截器

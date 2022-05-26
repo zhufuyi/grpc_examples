@@ -104,7 +104,7 @@ message MetricDescriptor {
   // use a natural hierarchical grouping. For example:
   //
   //     "custom.googleapis.com/invoice/paid/amount"
-  //     "external.googleapis.com/prometheus/up"
+  //     "external.googleapis.com/metrics/up"
   //     "appengine.googleapis.com/http/server/response_latencies"
   string type = 8;
 
