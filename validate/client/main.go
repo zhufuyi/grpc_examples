@@ -10,11 +10,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func login(client pb.AccountClient, email string, password string) error {
-	resp, err := client.Login(context.Background(), &pb.LoginRequest{
-		Email:    email,
-		Password: password,
-	})
+func login(client pb.AccountClient, req *pb.LoginRequest) error {
+	resp, err := client.Login(context.Background(), req)
 	if err != nil {
 		return fmt.Errorf("%v\n", err)
 	}
@@ -32,23 +29,47 @@ func main() {
 
 	client := pb.NewAccountClient(conn)
 
-	var email, password string
-
-	email = "zhangsan@126.com"
-	password = "123456"
-	if err := login(client, email, password); err != nil {
+	// 所有字段正确
+	req := &pb.LoginRequest{
+		Id:       10001,
+		Email:    "zhangsan@126.com",
+		Password: "123456",
+		Phone:    "13566666666",
+	}
+	if err := login(client, req); err != nil {
 		fmt.Println(err)
 	}
 
-	email = "zhangsan"
-	password = "123456"
-	if err := login(client, email, password); err != nil {
+	// email 字段错误
+	req = &pb.LoginRequest{
+		Id:       10001,
+		Email:    "zhangsan",
+		Password: "123456",
+		Phone:    "13566666666",
+	}
+	if err := login(client, req); err != nil {
 		fmt.Println(err)
 	}
 
-	email = "zhangsan@126.com"
-	password = "abcdef"
-	if err := login(client, email, password); err != nil {
+	// password 字段错误
+	req = &pb.LoginRequest{
+		Id:       10001,
+		Email:    "zhangsan@126.com",
+		Password: "apcdef",
+		Phone:    "13566666666",
+	}
+	if err := login(client, req); err != nil {
+		fmt.Println(err)
+	}
+
+	// phone 字段错误
+	req = &pb.LoginRequest{
+		Id:       10001,
+		Email:    "zhangsan@126.com",
+		Password: "123456",
+		Phone:    "1234567890",
+	}
+	if err := login(client, req); err != nil {
 		fmt.Println(err)
 	}
 }

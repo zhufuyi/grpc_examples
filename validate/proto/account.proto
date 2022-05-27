@@ -12,10 +12,14 @@ service Account {
 }
 
 message LoginRequest {
-    string email = 1 [(validate.rules).string.email = true]; // 校验email字段
-    string password = 2 [(validate.rules).string = { // 密码必须是数字，最大16位
-        pattern:   "^[0-9]*$",
+    uint64 id = 1 [(validate.rules).uint64.gt    = 10000]; // id值大于1000
+    string email = 2 [(validate.rules).string.email = true]; // 校验email字段
+    string password = 3 [(validate.rules).string = { // 密码必须是数字，最大16位
+        pattern: "^[0-9]*$",
         max_bytes: 16,
+    }];
+    string phone  = 4 [(validate.rules).string = {  // 校验手机号码
+        pattern: "^1[3456789]\\d{9}$",
     }];
 }
 

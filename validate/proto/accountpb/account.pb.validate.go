@@ -57,6 +57,17 @@ func (m *LoginRequest) validate(all bool) error {
 
 	var errors []error
 
+	if m.GetId() <= 10000 {
+		err := LoginRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 10000",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if err := m._validateEmail(m.GetEmail()); err != nil {
 		err = LoginRequestValidationError{
 			field:  "Email",
@@ -84,6 +95,17 @@ func (m *LoginRequest) validate(all bool) error {
 		err := LoginRequestValidationError{
 			field:  "Password",
 			reason: "value does not match regex pattern \"^[0-9]*$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_LoginRequest_Phone_Pattern.MatchString(m.GetPhone()) {
+		err := LoginRequestValidationError{
+			field:  "Phone",
+			reason: "value does not match regex pattern \"^1[3456789]\\\\d{9}$\"",
 		}
 		if !all {
 			return err
@@ -219,6 +241,8 @@ var _ interface {
 } = LoginRequestValidationError{}
 
 var _LoginRequest_Password_Pattern = regexp.MustCompile("^[0-9]*$")
+
+var _LoginRequest_Phone_Pattern = regexp.MustCompile("^1[3456789]\\d{9}$")
 
 // Validate checks the field values on LoginReply with the rules defined in the
 // proto definition for this message. If any rules are violated, the first

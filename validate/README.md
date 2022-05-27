@@ -18,3 +18,7 @@ if err != nil {
     return nil, status.Errorf(codes.InvalidArgument, "%v", err)
 }
 ```
+
+<br>
+
+Click for more [constraint rules](proto/constraint_rules.md).
