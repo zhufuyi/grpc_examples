@@ -10,6 +10,7 @@
 # Various plug-in versions
 # protoc                    v3.20.1      command
 # protoc-gen-go             v1.28.0      plugin，generate *.pb.go file based on proto files, which are populated, serialized and retrieved message type code.
+# protoc-gen-gogofaster     v1.28.0      plugin，generate *.pb.go file based on proto files, replaces protoc-gen-go plugin for faster encoding and decoding, custom tags are also supported.
 # protoc-gen-go-grpc        v1.2.0       plugin，generate *_grpc.pb.go file based on proto files, which are client-side and server-side method and interface code.
 # protoc-gen-grpc-gateway   v2.10.0      plugin，generate *.pb.gw.go file based on proto file, which is the api code for web.
 # protoc-gen-openapiv2      v2.10.0      plugin，generate *.swagger.json file based on proto file, which is swagger-ui interface documentation.
@@ -21,6 +22,7 @@ https://github.com/protocolbuffers/protobuf/releases/tag/v3.20.1
 
 # install plugin protoc-gen-go,protoc-gen-go-grpc,protoc-gen-validate
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+go install github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.2
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 go install github.com/envoyproxy/protoc-gen-validate@v0.6.7
 
@@ -55,5 +57,6 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [waitForReady](waitForReady)
 - [default grpc metrics](metrics/defaultMetrics)
 - [customized grpc metrics](metrics/customizedMetrics)
+- [hystrix](hystrix/withMetrics)
 
 <br>

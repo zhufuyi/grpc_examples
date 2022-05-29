@@ -3,6 +3,7 @@ module grpc_examples
 go 1.17
 
 require (
+	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/elazarl/go-bindata-assetfs v1.0.1
 	github.com/envoyproxy/protoc-gen-validate v0.6.7
 	github.com/gin-gonic/gin v1.7.7
@@ -13,6 +14,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.1
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645
+	github.com/gunerhuseyin/goprometheus v0.0.2
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.12.2
 	github.com/reugn/equalizer v0.0.0-20210216135016-a959c509d7ad
@@ -27,8 +29,11 @@ require (
 )
 
 require (
+	github.com/DataDog/datadog-go v4.8.3+incompatible // indirect
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
+	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/cactus/go-statsd-client/statsd v0.0.0-00010101000000-000000000000 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -47,6 +52,8 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
+	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
+	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
@@ -59,4 +66,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
-//replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
+replace github.com/cactus/go-statsd-client/statsd => github.com/cactus/go-statsd-client/statsd v0.0.0-20200423205355-cb0885a1018c
