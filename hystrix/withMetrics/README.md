@@ -6,9 +6,12 @@ Install the pressure testing tool
 
 > go install github.com/six-ddc/plow@latest
 
-Start the web service
+Running grpc server and client
 
-> go run main.go
+```bash
+cd server && go run main.go
+cd client && go run main.go
+```
 
 Crush test for 30 seconds
 

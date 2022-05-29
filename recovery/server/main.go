@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"grpc_examples/pkg/middleware"
 	"net"
 	"time"
 
+	"grpc_examples/pkg/middleware"
 	pb "grpc_examples/recovery/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
