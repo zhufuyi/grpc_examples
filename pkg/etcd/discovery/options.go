@@ -8,7 +8,7 @@ var (
 	defaultTTLSeconds             int64 = 10
 	defaultVersion                      = ""
 	defaultWeight                 int64 = 0
-	defaultLogger                       = zap.NewNop()
+	defaultLogger                       = zap.NewExample()
 	defaultEtcdDialTimeoutSeconds       = 3
 )
 

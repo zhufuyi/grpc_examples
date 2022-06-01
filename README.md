@@ -51,7 +51,7 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [waitForReady](waitForReady)
 - [retry](retry)
 - [ratelimit](ratelimit)
-- [etcd register and discover](registerDiscover)
+- [etcd register and discovery](registerDiscovery)
 - [cliend side loadbalance](loadbalance/client_loadbalance)
 - [etcd loadbalance](loadbalance/etcd_loadbalance)
 - [gin-->rpc tracing](tracing/api2rpc)

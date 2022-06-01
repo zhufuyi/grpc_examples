@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"grpc_examples/pkg/etcd/discovery"
-	pb "grpc_examples/registerDiscover/etcd/proto/hellopb"
+	pb "grpc_examples/registerDiscovery/etcd/proto/hellopb"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

@@ -82,8 +82,15 @@ func (r *Register) registerServer() error {
 
 // Stop stop register
 func (r *Register) Stop() {
+	defer func() {
+		if err := recover(); err != nil {
+			r.logger.Warn("repeated stopped")
+		}
+	}()
+
 	r.closeCh <- struct{}{}
 	time.Sleep(time.Millisecond * 100) // Allow a little time before exiting the service to give the goroutine a chance to unregister node
+	close(r.closeCh)
 }
 
 // register 注册节点
