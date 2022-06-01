@@ -31,11 +31,7 @@ func startServer(addr string) {
 	}
 
 	server := grpc.NewServer()
-
 	pb.RegisterGreeterServer(server, &GreeterServer{addr: addr})
-	if err != nil {
-		panic(err)
-	}
 
 	err = server.Serve(list)
 	if err != nil {
