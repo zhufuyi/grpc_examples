@@ -7,8 +7,7 @@ import (
 	"sync"
 	"time"
 
-	pb "grpc_examples/retry/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/retry/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

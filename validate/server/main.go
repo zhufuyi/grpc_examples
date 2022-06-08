@@ -6,8 +6,7 @@ import (
 	"net"
 	"time"
 
-	pb "grpc_examples/validate/proto/accountpb"
-
+	pb "github.com/zhufuyi/grpc_examples/validate/proto/accountpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

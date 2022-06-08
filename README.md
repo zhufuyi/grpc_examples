@@ -53,7 +53,7 @@ https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 - [ratelimit](ratelimit)
 - [etcd register and discovery](registerDiscovery)
 - [cliend side loadbalance](loadbalance/client_loadbalance)
-- [etcd loadbalance](loadbalance/etcd_loadbalance)
+- [loadbalance use with etcd](loadbalance/etcd_loadbalance)
 - [gin-->rpc tracing](tracing/api2rpc)
 - [rpc-->rpc tracing](tracing/rpc2rpc)
 - [grpc-gateway api to gRPC](http2grpc)

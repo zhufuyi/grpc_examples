@@ -6,10 +6,9 @@ import (
 	"net"
 	"time"
 
-	pb "grpc_examples/ratelimit/token_bucket/proto/hellopb"
-
 	"github.com/grpc-ecosystem/go-grpc-middleware/ratelimit"
 	"github.com/reugn/equalizer"
+	pb "github.com/zhufuyi/grpc_examples/ratelimit/token_bucket/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

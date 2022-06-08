@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	pb "grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
-	"grpc_examples/pkg/etcd/discovery"
+	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/etcd/discovery"
 
 	"google.golang.org/grpc"
 )

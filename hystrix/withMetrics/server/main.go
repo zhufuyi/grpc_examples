@@ -7,8 +7,7 @@ import (
 	"net"
 	"time"
 
-	pb "grpc_examples/hystrix/withMetrics/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/hystrix/withMetrics/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

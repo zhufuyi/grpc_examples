@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net"
 
-	pb "grpc_examples/logging/proto/hellopb"
-	"grpc_examples/pkg/middleware"
+	pb "github.com/zhufuyi/grpc_examples/logging/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/middleware"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"go.uber.org/zap"

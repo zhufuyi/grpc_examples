@@ -6,10 +6,9 @@ import (
 	"sync"
 	"time"
 
-	pb "grpc_examples/hystrix/baseuse/proto/hellopb"
-	"grpc_examples/pkg/hystrix"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	pb "github.com/zhufuyi/grpc_examples/hystrix/baseuse/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/hystrix"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -70,7 +69,7 @@ func main() {
 	}
 	wg.Wait()
 
-	fmt.Println("--------------------------\n\n")
+	fmt.Println("--------------------------")
 
 	time.Sleep(time.Second * 11)
 	// 测试熔断是否恢复

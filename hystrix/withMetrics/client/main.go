@@ -6,10 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	pb "grpc_examples/hystrix/withMetrics/proto/hellopb"
-	"grpc_examples/pkg/hystrix"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	pb "github.com/zhufuyi/grpc_examples/hystrix/withMetrics/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/hystrix"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

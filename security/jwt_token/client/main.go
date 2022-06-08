@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"grpc_examples/pkg/gtls"
-	"grpc_examples/pkg/gtls/certfile"
-	pb "grpc_examples/security/jwt_token/proto/accountpb"
-
+	"github.com/zhufuyi/grpc_examples/pkg/gtls"
+	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
+	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"

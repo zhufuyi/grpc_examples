@@ -9,9 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"grpc_examples/pkg/etcd/discovery"
-	pb "grpc_examples/registerDiscovery/etcd/proto/hellopb"
-
+	"github.com/zhufuyi/grpc_examples/pkg/etcd/discovery"
+	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

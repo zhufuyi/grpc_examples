@@ -3,10 +3,9 @@ package main
 import (
 	"net/http"
 
-	"grpc_examples/pkg/tracer"
-	pb "grpc_examples/tracing/api2rpc/proto/hellopb"
-
 	"github.com/gin-gonic/gin"
+	"github.com/zhufuyi/grpc_examples/pkg/tracer"
+	pb "github.com/zhufuyi/grpc_examples/tracing/api2rpc/proto/hellopb"
 )
 
 var (

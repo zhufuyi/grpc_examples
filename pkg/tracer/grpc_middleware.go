@@ -1,9 +1,8 @@
 package tracer
 
 import (
-	"grpc_examples/pkg/tracer/otgrpc"
-
 	"github.com/opentracing/opentracing-go"
+	"github.com/zhufuyi/grpc_examples/pkg/tracer/otgrpc"
 	"google.golang.org/grpc"
 )
 

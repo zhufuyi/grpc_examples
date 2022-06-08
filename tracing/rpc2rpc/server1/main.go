@@ -6,10 +6,9 @@ import (
 	"net"
 	"time"
 
-	"grpc_examples/pkg/tracer"
-	pb "grpc_examples/tracing/api2rpc/proto/hellopb"
-
 	"github.com/opentracing/opentracing-go"
+	"github.com/zhufuyi/grpc_examples/pkg/tracer"
+	pb "github.com/zhufuyi/grpc_examples/tracing/api2rpc/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

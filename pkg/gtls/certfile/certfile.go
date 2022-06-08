@@ -24,7 +24,7 @@ func Path(rel string) string {
 /*
 useage:
 
-improt "grpc_examples/pkg/gtls/certfile"
+improt "github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
 
 filepath=certfile.Path("one-way/server.crt")
 */

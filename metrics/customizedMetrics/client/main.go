@@ -6,9 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	pb "grpc_examples/metrics/customizedMetrics/proto/hellopb"
-	"grpc_examples/pkg/metrics/clientMetrics"
-
+	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/metrics/clientMetrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

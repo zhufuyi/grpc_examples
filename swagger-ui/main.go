@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"grpc_examples/pkg/swagger"
-	jsonfile "grpc_examples/swagger-ui/proto"
+	"github.com/zhufuyi/grpc_examples/pkg/swagger"
+	jsonfile "github.com/zhufuyi/grpc_examples/swagger-ui/proto"
 )
 
 var swaggerAddr = "127.0.0.1:8080"

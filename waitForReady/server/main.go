@@ -7,8 +7,7 @@ import (
 	"net"
 	"time"
 
-	pb "grpc_examples/waitForReady/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/waitForReady/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

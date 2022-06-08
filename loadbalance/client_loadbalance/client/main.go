@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	pb "grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
-	"grpc_examples/pkg/loadbalance"
-
+	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/pkg/loadbalance"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

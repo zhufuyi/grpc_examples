@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	pb "grpc_examples/metrics/defaultMetrics/proto/hellopb"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

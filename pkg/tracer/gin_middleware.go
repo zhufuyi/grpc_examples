@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"grpc_examples/pkg/tracer/otgrpc"
-
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	"github.com/zhufuyi/grpc_examples/pkg/tracer/otgrpc"
 )
 
 // GinCtx 把gin的context转换为标准的context

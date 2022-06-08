@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"sync"
 
-	jsonfile "grpc_examples/http2grpc/proto"
-	pb "grpc_examples/http2grpc/proto/accountpb"
-	"grpc_examples/pkg/swagger"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	jsonfile "github.com/zhufuyi/grpc_examples/http2grpc/proto"
+	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
+	"github.com/zhufuyi/grpc_examples/pkg/swagger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

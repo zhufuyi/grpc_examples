@@ -5,8 +5,7 @@ package errcode
 import (
 	"fmt"
 
-	pb "grpc_examples/pkg/errcode/proto/rpcerrorpb"
-
+	pb "github.com/zhufuyi/grpc_examples/pkg/errcode/proto/rpcerrorpb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

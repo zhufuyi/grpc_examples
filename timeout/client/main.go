@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "grpc_examples/timeout/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/timeout/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

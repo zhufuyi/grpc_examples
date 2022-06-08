@@ -8,8 +8,7 @@ import (
 	"strings"
 	"time"
 
-	pb "grpc_examples/helloworld/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/helloworld/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	pb "grpc_examples/interceptor/proto/hellopb"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	pb "github.com/zhufuyi/grpc_examples/interceptor/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

@@ -6,10 +6,9 @@ import (
 	"net"
 	"time"
 
-	"grpc_examples/pkg/middleware"
-	pb "grpc_examples/recovery/proto/hellopb"
-
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/zhufuyi/grpc_examples/pkg/middleware"
+	pb "github.com/zhufuyi/grpc_examples/recovery/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

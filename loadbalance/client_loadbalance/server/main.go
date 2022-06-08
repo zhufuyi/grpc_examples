@@ -6,8 +6,7 @@ import (
 	"net"
 	"sync"
 
-	pb "grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

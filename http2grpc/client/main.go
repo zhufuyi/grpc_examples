@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "grpc_examples/http2grpc/proto/accountpb"
-
+	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"grpc_examples/pkg/gtls"
-	"grpc_examples/pkg/gtls/certfile"
-	pb "grpc_examples/security/tls/proto/hellopb"
-
+	"github.com/zhufuyi/grpc_examples/pkg/gtls"
+	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
+	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 	"google.golang.org/grpc"
 )
 

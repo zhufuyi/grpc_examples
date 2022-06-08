@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"net"
 
-	"grpc_examples/pkg/gtls"
-	"grpc_examples/pkg/gtls/certfile"
-	pb "grpc_examples/security/kv_token/proto/hellopb"
-
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/zhufuyi/grpc_examples/pkg/gtls"
+	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
+	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )

@@ -3,9 +3,8 @@ package middleware
 import (
 	"context"
 
-	"grpc_examples/pkg/jwt"
-
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	"github.com/zhufuyi/grpc_examples/pkg/jwt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

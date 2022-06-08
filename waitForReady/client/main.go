@@ -6,8 +6,7 @@ import (
 	"sync"
 	"time"
 
-	pb "grpc_examples/waitForReady/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/waitForReady/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

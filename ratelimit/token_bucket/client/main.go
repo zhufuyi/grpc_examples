@@ -6,8 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	pb "grpc_examples/ratelimit/token_bucket/proto/hellopb"
-
+	pb "github.com/zhufuyi/grpc_examples/ratelimit/token_bucket/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

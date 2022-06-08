@@ -7,10 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	pb "grpc_examples/metrics/defaultMetrics/proto/hellopb"
-
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
