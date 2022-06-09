@@ -1,6 +1,6 @@
-## Example of GRPC usage
+## grpc_examples
 
-### Installation environment
+### Installation
 
 (1) Copy the protobuf file dependency folder [include](include) to the `$GOPATH/bin` directory.
 
