@@ -11,7 +11,7 @@ import (
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/prometheus/client_golang/prometheus"
 	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/metrics/serverMetrics"
+	"github.com/zhufuyi/pkg/grpc/metrics/serverMetrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

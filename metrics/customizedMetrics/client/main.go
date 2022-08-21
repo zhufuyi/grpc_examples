@@ -7,7 +7,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/metrics/clientMetrics"
+	"github.com/zhufuyi/pkg/grpc/metrics/clientMetrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

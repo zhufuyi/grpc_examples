@@ -9,16 +9,14 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	jsonfile "github.com/zhufuyi/grpc_examples/http2grpc/proto"
 	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
-	"github.com/zhufuyi/grpc_examples/pkg/swagger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
-	webAddr  = "127.0.0.1:8080"
-	grpcAddr = "127.0.0.1:9090"
+	webAddr  = "127.0.0.1:9090"
+	grpcAddr = "127.0.0.1:8080"
 )
 
 type GreeterServer struct {
@@ -73,8 +71,6 @@ func webServer() {
 	mux := http.NewServeMux()
 	// 注册rpc服务的api接口路由
 	mux.Handle("/", gwMux)
-	// 注册swagger-ui和swagger json文件路由
-	swagger.RegisterRoute(mux, jsonfile.Path("/accountpb"))
 
 	fmt.Println("start up web server ", webAddr)
 	err = http.ListenAndServe(webAddr, mux)

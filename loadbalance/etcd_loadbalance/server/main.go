@@ -9,8 +9,7 @@ import (
 	"syscall"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/etcd/discovery"
-
+	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 	"google.golang.org/grpc"
 )
 

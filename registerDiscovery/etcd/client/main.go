@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zhufuyi/grpc_examples/pkg/etcd/discovery"
+	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
 
 	"google.golang.org/grpc"

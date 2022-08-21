@@ -6,8 +6,8 @@ import (
 	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/zhufuyi/grpc_examples/pkg/middleware"
 	pb "github.com/zhufuyi/grpc_examples/retry/proto/hellopb"
+	"github.com/zhufuyi/pkg/grpc/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

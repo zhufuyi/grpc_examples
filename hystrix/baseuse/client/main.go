@@ -8,7 +8,7 @@ import (
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/hystrix/baseuse/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/hystrix"
+	"github.com/zhufuyi/pkg/grpc/hystrix"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

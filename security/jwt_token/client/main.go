@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zhufuyi/grpc_examples/pkg/gtls"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
+	"github.com/zhufuyi/pkg/grpc/gtls"
+	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
@@ -61,7 +61,7 @@ func getDialOptions(isUseTLS bool) []grpc.DialOption {
 func main() {
 	isUseTLS = true // 设置是否需要TLS加密
 
-	conn, err := grpc.Dial("127.0.0.1:9090", getDialOptions(isUseTLS)...)
+	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions(isUseTLS)...)
 	if err != nil {
 		panic(err)
 	}

@@ -9,14 +9,12 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
-	"github.com/zhufuyi/grpc_examples/pkg/jwt"
-	"github.com/zhufuyi/grpc_examples/pkg/middleware"
-	"github.com/zhufuyi/grpc_examples/pkg/swagger"
-	jsonfile "github.com/zhufuyi/grpc_examples/security/jwt_token/proto"
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
-	"github.com/zhufuyi/pkg/snowFlake"
+	"github.com/zhufuyi/pkg/grpc/gtls"
+	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/pkg/grpc/middleware"
+	"github.com/zhufuyi/pkg/jwt"
+	"github.com/zhufuyi/pkg/snowflake"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
@@ -25,8 +23,8 @@ import (
 
 const (
 	//authScheme = "bearer"
-	webAddr  = "127.0.0.1:8080"
-	grpcAddr = "127.0.0.1:9090"
+	webAddr  = "127.0.0.1:9090"
+	grpcAddr = "127.0.0.1:8080"
 )
 
 var isUseTLS bool // 是否开启TLS加密
@@ -73,10 +71,10 @@ func (a *Account) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	}
 
 	// 生成id
-	id := snowFlake.NewID()
+	id := snowflake.NewID()
 
 	// 生成token
-	token, err := jwt.GenerateTokenWithCustom(strconv.FormatInt(id, 10))
+	token, err := jwt.GenerateToken(strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "generate token error %v", err)
 	}
@@ -186,8 +184,6 @@ func webServer() {
 	mux := http.NewServeMux()
 	// 注册rpc服务的api接口路由
 	mux.Handle("/", gwMux)
-	// 注册swagger-ui和swagger json文件路由
-	swagger.RegisterRoute(mux, jsonfile.Path("/accountpb"))
 
 	fmt.Println("start web server ", webAddr)
 	if !isUseTLS {
@@ -204,22 +200,12 @@ func main() {
 	// 设置是否开启TLS
 	isUseTLS = true
 
+	// 初始jwt
+	jwt.Init()
 	// 设置用户id生成器
-	snowFlake.InitSnowFlake(1)
+	snowflake.Init(1)
 
 	go grpcServer()
 
 	webServer()
 }
-
-/*
-使用：
-(1) 启动服务
-go run main.go
-
-(2) 因为isUseTLS = true，设置使用了TLS加密，访问都需要https
-在浏览器访问swagger UI https://127.0.0.1:8080/swagger-ui/
-输入 https://127.0.0.1:8080/swagger/account.swagger.json
-
-(3) 测试http到grpc接口
-*/

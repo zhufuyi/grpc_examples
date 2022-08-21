@@ -18,6 +18,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   };
 
   // 默认为HTTPS，根据实际需要设置
+  schemes: HTTP;
   schemes: HTTPS;
 
   // 在swagger设置全局authorization
@@ -43,8 +44,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
   // 显示扩展文档
   external_docs: {
-    url: "https://zhuyasen.com";
-    description: "博客";
+    url: "https://github.com/zhufuyi/grpc_examples";
+    description: "grpc examples";
   }
 
 };

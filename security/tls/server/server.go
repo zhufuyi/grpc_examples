@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/zhufuyi/grpc_examples/pkg/gtls"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
+	"github.com/zhufuyi/pkg/grpc/gtls"
+	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 	"google.golang.org/grpc"
 )

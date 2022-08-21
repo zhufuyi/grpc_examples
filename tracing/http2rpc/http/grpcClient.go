@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/zhufuyi/grpc_examples/pkg/tracer"
-	pb "github.com/zhufuyi/grpc_examples/tracing/api2rpc/proto/hellopb"
+	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
+	"github.com/zhufuyi/pkg/grpc/middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -19,7 +19,7 @@ func getDialOptions() []grpc.DialOption {
 
 	// tracing跟踪
 	options = append(options, grpc.WithUnaryInterceptor(
-		tracer.UnaryClientTracing(),
+		middleware.UnaryClientTracing(),
 	))
 
 	return options

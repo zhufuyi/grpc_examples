@@ -6,9 +6,9 @@ import (
 	"net"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls"
-	"github.com/zhufuyi/grpc_examples/pkg/gtls/certfile"
 	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
+	"github.com/zhufuyi/pkg/grpc/gtls"
+	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )

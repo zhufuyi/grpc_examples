@@ -8,7 +8,7 @@ import (
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/hystrix/withMetrics/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/hystrix"
+	"github.com/zhufuyi/pkg/grpc/hystrix"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -64,6 +64,7 @@ func main() {
 		}
 	})
 
+	fmt.Println("start web server, port: 6060")
 	err = http.ListenAndServe(":6060", nil)
 	if err != nil {
 		panic(err)

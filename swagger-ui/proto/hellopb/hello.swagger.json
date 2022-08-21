@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "hello.proto",
+    "title": "Hello-demo",
     "version": "2.0"
   },
   "tags": [
@@ -10,7 +10,8 @@
     }
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -98,7 +99,7 @@
     }
   },
   "externalDocs": {
-    "description": "博客",
-    "url": "https://zhuyasen.com"
+    "description": "grpc examples",
+    "url": "https://github.com/zhufuyi/grpc_examples"
   }
 }

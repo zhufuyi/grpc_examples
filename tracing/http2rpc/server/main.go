@@ -17,13 +17,13 @@ type GreeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-// SayHi 一元RPC
-func (g *GreeterServer) SayHi(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+// SayHello 一元RPC
+func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	time.Sleep(time.Millisecond * 15)
-	resp := &pb.HelloReply{Message: "hi " + r.Name}
+	resp := &pb.HelloReply{Message: "hello " + r.Name}
 	fmt.Printf("resp: %s\n", resp.Message)
 
-	tracing.SpanDemo("sayHi", ctx) // 模拟创建一个span
+	tracing.SpanDemo("sayHello", ctx) // 模拟创建一个span
 
 	return resp, nil
 }
@@ -40,10 +40,10 @@ func getServerOptions() []grpc.ServerOption {
 }
 
 func main() {
-	tracing.InitTrace("hello-server2")
+	tracing.InitTrace("hello-server")
 	defer tracer.Close(context.Background())
 
-	addr := ":8081"
+	addr := ":8080"
 	fmt.Println("start rpc server", addr)
 
 	// 监听TCP端口

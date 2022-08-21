@@ -8,6 +8,8 @@ gRPC-Gateway is a plugin for the Google protocol buffer compiler protoc. It read
 
 ### Using
 
-(1) Start the service `go run main.go`
+(1) Start the grpc server `go run main.go`
 
-(2) Access swagger UI `http://127.0.0.1:8080/swagger-ui/` in your browser, then input `http://127.0.0.1:8080/swagger/account.swagger.json` to test the grpc interface proxied by http.
+(2) test grpc client `go run main.go`
+
+(3) test http request GET `http://127.0.0.1:9090/v1/getUser?id=1`

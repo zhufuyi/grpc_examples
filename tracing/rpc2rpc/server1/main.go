@@ -6,9 +6,10 @@ import (
 	"net"
 	"time"
 
-	"github.com/opentracing/opentracing-go"
-	"github.com/zhufuyi/grpc_examples/pkg/tracer"
-	pb "github.com/zhufuyi/grpc_examples/tracing/api2rpc/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/tracing"
+	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
+	"github.com/zhufuyi/pkg/grpc/middleware"
+	"github.com/zhufuyi/pkg/tracer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -19,29 +20,20 @@ type GreeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-// 一元RPC
+// SayHello 一元RPC
 func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
-	parentSpan := opentracing.SpanFromContext(ctx)
-
-	// 模拟redis
-	redisQuerySpan := opentracing.StartSpan("redis query", opentracing.ChildOf(parentSpan.Context()))
-	time.Sleep(10 * time.Millisecond)
-	redisQuerySpan.Finish()
-
-	// 模拟mysql查询
-	mysqlQuerySpan := opentracing.StartSpan("mysql query", opentracing.ChildOf(parentSpan.Context()))
-	time.Sleep(30 * time.Millisecond)
-	mysqlQuerySpan.Finish()
-
-	// 调用server2
-	uploadFileSpan := opentracing.StartSpan("invoker rpc 2", opentracing.ChildOf(parentSpan.Context()))
+	time.Sleep(time.Millisecond * 15)
 	resp, err := helloClient.SayHi(ctx, &pb.HelloRequest{Name: "lisi"})
 	if err != nil {
 		return nil, err
 	}
-	uploadFileSpan.Finish()
 
-	return &pb.HelloReply{Message: resp.Message + ", hello " + r.Name}, nil
+	resp2 := &pb.HelloReply{Message: resp.Message + ", hello " + r.Name}
+	fmt.Printf("resp: %s\n", resp2.Message)
+
+	tracing.SpanDemo("sayHello", ctx) // 模拟创建一个span
+
+	return resp2, nil
 }
 
 func getDialOptions() []grpc.DialOption {
@@ -52,7 +44,7 @@ func getDialOptions() []grpc.DialOption {
 
 	// tracing跟踪
 	options = append(options, grpc.WithUnaryInterceptor(
-		tracer.UnaryClientTracing(),
+		middleware.UnaryClientTracing(),
 	))
 
 	return options
@@ -73,19 +65,15 @@ func getServerOptions() []grpc.ServerOption {
 
 	// 链路跟踪拦截器
 	options = append(options, grpc.UnaryInterceptor(
-		tracer.UnaryServerTracing(),
+		middleware.UnaryServerTracing(),
 	))
 
 	return options
 }
 
 func main() {
-	// 连接jaeger服务端
-	closer, err := tracer.InitJaeger("tracing_demo", "192.168.3.36:6831")
-	if err != nil {
-		panic(err)
-	}
-	defer closer.Close()
+	tracing.InitTrace("hello-server1")
+	defer tracer.Close(context.Background())
 
 	// 连接server2
 	connectRPCServer("127.0.0.1:8081")

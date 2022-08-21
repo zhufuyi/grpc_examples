@@ -6,7 +6,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/keepalive/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/keepalive"
+	"github.com/zhufuyi/pkg/grpc/keepalive"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

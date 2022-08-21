@@ -6,9 +6,9 @@ import (
 	"net"
 
 	pb "github.com/zhufuyi/grpc_examples/logging/proto/hellopb"
-	"github.com/zhufuyi/grpc_examples/pkg/middleware"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/zhufuyi/pkg/grpc/middleware"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )

@@ -14,7 +14,7 @@ docker run -d --name jaeger \
   -p 14268:14268 \
   -p 14269:14269 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.33
+  jaegertracing/all-in-one:latest
 ```
 
 Uploading information to jaeger via `6831` udp port.
@@ -34,8 +34,6 @@ Open jaeger's UI in your browser `http://127.0.0.1:16686`
 Select **[service]** in the left menu bar and click on **[file trace]** to view the details, as shown below.
 
 
-![api2grpc](rpc2rpc_tracing.jpg)
+![rpc2grpc](rpc2rpc_tracing.jpg)
 
 <br>
-
- OpenTracing Semantic Conventions https://github.com/opentracing/specification/blob/master/semantic_conventions.md
