@@ -11,8 +11,8 @@ import (
 func main() {
 	info := &pb.User{
 		Id:    123,
-		Name:  "abc",
-		Email: "abc@123.com",
+		Name:  "foo",
+		Email: "foo@bar.com",
 	}
 	fmt.Println("source data:", info)
 

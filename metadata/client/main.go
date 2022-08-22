@@ -29,7 +29,7 @@ func sayHello(client pb.GreeterClient) error {
 		grpc.Trailer(&trailer),
 	}
 
-	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "zhangsan"}, options...)
+	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"}, options...)
 	if err != nil {
 		return err
 	}

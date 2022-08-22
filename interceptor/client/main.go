@@ -59,7 +59,7 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	err = sayHello(client, "zhangsan")
+	err = sayHello(client, "foo")
 	if err != nil {
 		fmt.Println(err)
 	}

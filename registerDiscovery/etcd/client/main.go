@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
+	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,7 +17,7 @@ const serverName = "hello-demo"
 var etcdAddrs = []string{"192.168.3.36:2379"}
 
 func sayHello(client pb.GreeterClient) error {
-	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return err
 	}

@@ -31,7 +31,7 @@ func main() {
 	// 所有字段正确
 	req := &pb.LoginRequest{
 		Id:       10001,
-		Email:    "zhangsan@126.com",
+		Email:    "foo@bar.com",
 		Password: "123456",
 		Phone:    "13566666666",
 	}
@@ -42,7 +42,7 @@ func main() {
 	// email 字段错误
 	req = &pb.LoginRequest{
 		Id:       10001,
-		Email:    "zhangsan",
+		Email:    "foo",
 		Password: "123456",
 		Phone:    "13566666666",
 	}
@@ -53,7 +53,7 @@ func main() {
 	// password 字段错误
 	req = &pb.LoginRequest{
 		Id:       10001,
-		Email:    "zhangsan@126.com",
+		Email:    "foo@bar.com",
 		Password: "apcdef",
 		Phone:    "13566666666",
 	}
@@ -64,7 +64,7 @@ func main() {
 	// phone 字段错误
 	req = &pb.LoginRequest{
 		Id:       10001,
-		Email:    "zhangsan@126.com",
+		Email:    "foo@bar.com",
 		Password: "123456",
 		Phone:    "1234567890",
 	}

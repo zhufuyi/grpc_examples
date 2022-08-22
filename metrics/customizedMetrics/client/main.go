@@ -13,7 +13,7 @@ import (
 )
 
 func sayHello(client pb.GreeterClient, i int) error {
-	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "zhangsan " + strconv.Itoa(i)})
+	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "foo " + strconv.Itoa(i)})
 	if err != nil {
 		return err
 	}

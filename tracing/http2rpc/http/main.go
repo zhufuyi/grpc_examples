@@ -22,7 +22,7 @@ var (
 )
 
 func sayHello(c *gin.Context) {
-	resp, err := helloClient.SayHello(c.Request.Context(), &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := helloClient.SayHello(c.Request.Context(), &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return

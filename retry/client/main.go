@@ -16,7 +16,7 @@ func sayHello(client pb.GreeterClient) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
-	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return err
 	}

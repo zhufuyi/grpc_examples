@@ -12,7 +12,7 @@ import (
 )
 
 func unarySayHello(client pb.GreeterClient) error {
-	resp, err := client.UnarySayHello(context.Background(), &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.UnarySayHello(context.Background(), &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func unarySayHello(client pb.GreeterClient) error {
 }
 
 func serverStreamingSayHello(client pb.GreeterClient) error {
-	stream, err := client.ServerStreamingSayHello(context.Background(), &pb.HelloRequest{Name: "zhangsan"})
+	stream, err := client.ServerStreamingSayHello(context.Background(), &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func clientStreamingSayHello(client pb.GreeterClient) error {
 		return err
 	}
 
-	names := []string{"zhangsan", "lisi", "wangwu"}
+	names := []string{"foo1", "foo2", "foo3"}
 	for _, name := range names {
 		err := stream.Send(&pb.HelloRequest{Name: name})
 		if err != nil {
@@ -74,7 +74,7 @@ func bidirectionalStreamingSayHello(client pb.GreeterClient) error {
 		return err
 	}
 
-	names := []string{"zhangsan", "lisi", "wangwu"}
+	names := []string{"foo1", "foo2", "foo3"}
 	for _, name := range names {
 		err := stream.Send(&pb.HelloRequest{Name: name})
 		if err != nil {

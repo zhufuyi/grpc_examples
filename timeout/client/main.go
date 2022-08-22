@@ -14,7 +14,7 @@ func sayHello(client pb.GreeterClient) error {
 	to := time.Millisecond * 200
 	ctx, _ := context.WithTimeout(context.Background(), to)
 
-	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return fmt.Errorf("%v, timeout=%v", err, to)
 	}

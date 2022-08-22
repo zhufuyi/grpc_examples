@@ -14,7 +14,7 @@ import (
 func sayHello(ctx context.Context, client pb.GreeterClient, i int) error {
 	now := time.Now()
 
-	name := fmt.Sprintf("zhangsan[%d]", i)
+	name := fmt.Sprintf("foo[%d]", i)
 	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: name})
 	if err != nil {
 		return fmt.Errorf("%s, %v", name, err)

@@ -49,11 +49,11 @@ Start the rpc client, Load balancing using round_robin
 output: 
 
 ```bash
-hello zhangsan, (from 127.0.0.1:8082)
-hello zhangsan, (from 127.0.0.1:8080)
-hello zhangsan, (from 127.0.0.1:8081)
-hello zhangsan, (from 127.0.0.1:8082)
-hello zhangsan, (from 127.0.0.1:8080)
-hello zhangsan, (from 127.0.0.1:8081)
+hello foo, (from 127.0.0.1:8082)
+hello foo, (from 127.0.0.1:8080)
+hello foo, (from 127.0.0.1:8081)
+hello foo, (from 127.0.0.1:8082)
+hello foo, (from 127.0.0.1:8080)
+hello foo, (from 127.0.0.1:8081)
 ...
 ```

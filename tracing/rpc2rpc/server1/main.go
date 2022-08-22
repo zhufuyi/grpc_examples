@@ -23,7 +23,7 @@ type GreeterServer struct {
 // SayHello 一元RPC
 func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	time.Sleep(time.Millisecond * 15)
-	resp, err := helloClient.SayHi(ctx, &pb.HelloRequest{Name: "lisi"})
+	resp, err := helloClient.SayHi(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return nil, err
 	}
