@@ -12,4 +12,4 @@ gRPC-Gateway is a plugin for the Google protocol buffer compiler protoc. It read
 
 (2) test grpc client `go run main.go`
 
-(3) test http request GET `http://127.0.0.1:9090/v1/getUser?id=1`
+(3) open a browser and type in the address `http://127.0.0.1:9090/http2grpc/swagger/index.html`,

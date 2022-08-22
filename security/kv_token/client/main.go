@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
-	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
 	"google.golang.org/grpc"
 )
 
@@ -51,7 +51,7 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		panic(err)
 	}

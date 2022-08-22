@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
-	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 	"google.golang.org/grpc"
 )
 
@@ -15,7 +15,7 @@ func sayHello(client pb.GreeterClient) error {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2*time.Second))
 	defer cancel()
 
-	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "zhangsan"})
+	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		return err
 	}

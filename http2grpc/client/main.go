@@ -10,7 +10,7 @@ import (
 )
 
 func addUser(client pb.AccountClient) error {
-	resp, err := client.AddUser(context.Background(), &pb.User{Id: 1, Name: "zhangsan", Email: "zhangsan@126.com"})
+	resp, err := client.AddUser(context.Background(), &pb.User{Id: 1, Name: "foo", Email: "foo@bar.com"})
 	if err != nil {
 		return err
 	}

@@ -9,7 +9,9 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/zhufuyi/grpc_examples/http2grpc/proto"
 	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
+	"github.com/zhufuyi/grpc_examples/swagger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -71,6 +73,11 @@ func webServer() {
 	mux := http.NewServeMux()
 	// 注册rpc服务的api接口路由
 	mux.Handle("/", gwMux)
+
+	// 注册swagger路由
+	prefixPath := "/http2grpc/"
+	router := swagger.Router(prefixPath, proto.Path("accountpb/account.swagger.json"))
+	mux.Handle(prefixPath, router) // 必须以/结尾的路径
 
 	fmt.Println("start up web server ", webAddr)
 	err = http.ListenAndServe(webAddr, mux)

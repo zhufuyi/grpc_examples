@@ -16,7 +16,7 @@ var isUseTLS bool // 是否开启TLS加密
 
 func registerUser(client pb.AccountClient) (*pb.RegisterReply, error) {
 	resp, err := client.Register(context.Background(), &pb.RegisterRequest{
-		Name:     "lisi",
+		Name:     "foo",
 		Password: "123456"},
 	)
 	if err != nil {

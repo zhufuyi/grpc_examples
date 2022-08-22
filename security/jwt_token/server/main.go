@@ -9,7 +9,9 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/zhufuyi/grpc_examples/security/jwt_token/proto"
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
+	"github.com/zhufuyi/grpc_examples/swagger"
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"github.com/zhufuyi/pkg/grpc/middleware"
@@ -22,7 +24,6 @@ import (
 )
 
 const (
-	//authScheme = "bearer"
 	webAddr  = "127.0.0.1:9090"
 	grpcAddr = "127.0.0.1:8080"
 )
@@ -81,13 +82,13 @@ func (a *Account) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	token = middleware.GetAuthScheme() + " " + token
 	//fmt.Printf("create user uid:%s %v token:%s \n", uid, req, token)
 
-	a.saveUser(&userInfo{id, req.Name, req.Password, req.Name + "@126.com", token})
+	a.saveUser(&userInfo{id, req.Name, req.Password, req.Name + "@bar.com", token})
 
 	fmt.Printf("save data: %+v\n", a.getUserFromID(id))
 	return &pb.RegisterReply{Id: id, Token: token}, nil
 }
 
-// 需要鉴权
+// GetUser 需要鉴权
 func (a *Account) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	//uid := metautils.ExtractIncoming(ctx).Get("uid")            // 这是从header获取
 	tokenInfo, ok := ctx.Value("tokenInfo").(*jwt.CustomClaims) // 从拦截器设置值读取
@@ -184,6 +185,11 @@ func webServer() {
 	mux := http.NewServeMux()
 	// 注册rpc服务的api接口路由
 	mux.Handle("/", gwMux)
+
+	// 注册swagger路由
+	prefixPath := "/token/"
+	router := swagger.Router(prefixPath, proto.Path("accountpb/account.swagger.json"))
+	mux.Handle(prefixPath, router) // 必须以/结尾的路径
 
 	fmt.Println("start web server ", webAddr)
 	if !isUseTLS {
