@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package user_.v1;
+
+// 设置生成*go的包名
+option go_package = "./pb;pb";
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {}
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {}
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+}
+
+message CreateUserReply {
+  int64 id = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserReply {
+  User user = 1;
+}

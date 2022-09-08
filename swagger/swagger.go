@@ -23,6 +23,13 @@ func Router(path string, jsonFile string) *gin.Engine {
 	return r
 }
 
+// Handler swagger handler
+func Handler(r *gin.Engine, jsonFile string) {
+	registerSwagger(jsonFile)
+	// 访问路径 http://ip:port/swagger/index.html
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+}
+
 // 注册swagger
 func registerSwagger(jsonFile string) {
 	data, err := os.ReadFile(jsonFile)
