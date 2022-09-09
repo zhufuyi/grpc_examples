@@ -2,18 +2,21 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
 	"sync"
+	"sync/atomic"
+
+	"github.com/zhufuyi/grpc_examples/http2grpc/proto/pb"
+	"github.com/zhufuyi/grpc_examples/include"
+	"github.com/zhufuyi/grpc_examples/swagger"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/zhufuyi/grpc_examples/http2grpc/proto"
-	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
-	"github.com/zhufuyi/grpc_examples/swagger"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -21,23 +24,44 @@ const (
 	grpcAddr = "127.0.0.1:8080"
 )
 
-type GreeterServer struct {
-	pb.UnimplementedAccountServer
-	m *sync.Map
+var (
+	autoCount int64 = 0
+	sm              = new(sync.Map)
+
+	_ pb.UserServiceServer = (*UserServiceServer)(nil)
+)
+
+type UserServiceServer struct {
+	pb.UnimplementedUserServiceServer
 }
 
-func (g *GreeterServer) AddUser(ctx context.Context, user *pb.User) (*pb.ID, error) {
-	g.m.LoadOrStore(user.Id, user)
-	fmt.Printf("add user %v success\n", user)
-	return &pb.ID{Id: user.Id}, nil
+func NewUserServiceServer() pb.UserServiceServer {
+	return &UserServiceServer{}
 }
 
-func (g *GreeterServer) GetUser(ctx context.Context, id *pb.ID) (*pb.User, error) {
-	value, ok := g.m.Load(id.Id)
+func (s UserServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
+	id := atomic.AddInt64(&autoCount, 1)
+
+	sm.LoadOrStore(id, &pb.User{
+		Id:    id,
+		Name:  req.Name,
+		Email: req.Email,
+	})
+
+	return &pb.CreateUserReply{Id: id}, nil
+}
+
+func (s UserServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
+	value, ok := sm.Load(req.Id)
 	if !ok {
-		return nil, errors.New("not found user")
+		return nil, status.Error(codes.NotFound, fmt.Sprintf("id %v not found", req.Id))
 	}
-	return value.(*pb.User), nil
+	user, ok := value.(*pb.User)
+	if !ok {
+		return nil, status.Error(codes.Internal, "type error")
+	}
+
+	return &pb.GetUserReply{User: user}, nil
 }
 
 // grpc服务
@@ -48,7 +72,7 @@ func grpcServer() {
 	}
 
 	server := grpc.NewServer()
-	pb.RegisterAccountServer(server, &GreeterServer{m: new(sync.Map)})
+	pb.RegisterUserServiceServer(server, NewUserServiceServer())
 
 	fmt.Println("start up grpc server ", grpcAddr)
 	err = server.Serve(list)
@@ -65,7 +89,7 @@ func webServer() {
 
 	gwMux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())} // 这里的option和rpc的client正常调用一致
-	err := pb.RegisterAccountHandlerFromEndpoint(ctx, gwMux, grpcAddr, opts)
+	err := pb.RegisterUserServiceHandlerFromEndpoint(ctx, gwMux, grpcAddr, opts)
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +100,7 @@ func webServer() {
 
 	// 注册swagger路由
 	prefixPath := "/http2grpc/"
-	router := swagger.Router(prefixPath, proto.Path("accountpb/account.swagger.json"))
+	router := swagger.Router(prefixPath, include.Path("../http2grpc/proto/pb/user.swagger.json"))
 	mux.Handle(prefixPath, router) // 必须以/结尾的路径
 
 	fmt.Println("start up web server ", webAddr)

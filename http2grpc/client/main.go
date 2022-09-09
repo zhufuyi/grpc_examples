@@ -3,24 +3,31 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
-	pb "github.com/zhufuyi/grpc_examples/http2grpc/proto/accountpb"
+	"github.com/zhufuyi/grpc_examples/http2grpc/proto/pb"
+
+	"github.com/zhufuyi/pkg/krand"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func addUser(client pb.AccountClient) error {
-	resp, err := client.AddUser(context.Background(), &pb.User{Id: 1, Name: "foo", Email: "foo@bar.com"})
+func createUser(client pb.UserServiceClient) (int64, error) {
+	name := krand.String(krand.R_LOWER)
+	resp, err := client.CreateUser(context.Background(), &pb.CreateUserRequest{
+		Name:  name,
+		Email: name + "@bar.com",
+	})
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	fmt.Println("add user success", resp.Id)
-	return nil
+	fmt.Println("add user success, id =", resp.Id)
+	return resp.Id, nil
 }
 
-func getUser(client pb.AccountClient) error {
-	resp, err := client.GetUser(context.Background(), &pb.ID{Id: 1})
+func getUser(client pb.UserServiceClient, id int64) error {
+	resp, err := client.GetUser(context.Background(), &pb.GetUserRequest{Id: id})
 	if err != nil {
 		return err
 	}
@@ -36,15 +43,18 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewAccountClient(conn)
+	client := pb.NewUserServiceClient(conn)
 
-	err = addUser(client)
-	if err != nil {
-		panic(err)
-	}
+	for i := 0; i < 10; i++ {
+		id, err := createUser(client)
+		if err != nil {
+			panic(err)
+		}
 
-	err = getUser(client)
-	if err != nil {
-		panic(err)
+		err = getUser(client, id)
+		if err != nil {
+			panic(err)
+		}
+		time.Sleep(time.Second * 2)
 	}
 }

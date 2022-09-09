@@ -10,7 +10,7 @@
 # 服务名称
 serverName="account"
 
-outPath="${serverName}pb"  # 和proto文件的go_package名称一致，也就是文件夹名和包名一致
+outPath="pb"  # 和proto文件的go_package名称一致，也就是文件夹名和包名一致
 mkdir -p ${outPath}
 
 # 生成pb.go和grpc.pb.go文件，如果要兼容旧版本protoc-gen-go生成代码，需要添加参数--go-grpc_opt=require_unimplemented_servers=false，或者在实现接口添加pb.Unimplemented***Server

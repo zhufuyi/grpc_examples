@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "account.proto",
+    "title": "user.proto",
     "version": "2.0"
   },
   "tags": [
     {
-      "name": "Account"
+      "name": "UserService"
     }
   ],
   "schemes": [
@@ -20,16 +20,16 @@
     "application/json"
   ],
   "paths": {
-    "/v1/addUser": {
+    "/v1/user": {
       "post": {
-        "summary": "添加用户",
-        "description": "add one User",
-        "operationId": "Account_AddUser",
+        "summary": "创建用户",
+        "description": "create one User",
+        "operationId": "UserService_CreateUser",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protoID"
+              "$ref": "#/definitions/v1CreateUserReply"
             }
           },
           "default": {
@@ -45,25 +45,25 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/protoUser"
+              "$ref": "#/definitions/v1CreateUserRequest"
             }
           }
         ],
         "tags": [
-          "addUser"
+          "user"
         ]
       }
     },
-    "/v1/getUser": {
+    "/v1/user/{id}": {
       "get": {
-        "summary": "获取用户",
+        "summary": "获取用户详情",
         "description": "get one user",
-        "operationId": "Account_GetUser",
+        "operationId": "UserService_GetUser",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protoUser"
+              "$ref": "#/definitions/v1GetUserReply"
             }
           },
           "default": {
@@ -76,43 +76,19 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
-            "required": false,
+            "in": "path",
+            "required": true,
             "type": "string",
             "format": "int64"
           }
         ],
         "tags": [
-          "getUser"
+          "user"
         ]
       }
     }
   },
   "definitions": {
-    "protoID": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        }
-      }
-    },
-    "protoUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -137,6 +113,49 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "userv1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateUserReply": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "v1CreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetUserReply": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/userv1User"
         }
       }
     }

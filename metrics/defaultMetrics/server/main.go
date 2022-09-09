@@ -37,7 +37,7 @@ func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 // 启动metrics服务
 func defaultDefaultServer(addr string, grpcServer *grpc.Server) {
 	grpc_prometheus.EnableHandlingTimeHistogram() // 开启了对RPCs处理时间的记录
-	grpc_prometheus.Register(grpcServer)          // 注册rpc服务到metrics
+	grpc_prometheus.Register(grpcServer)          // 注册metrics到rpc服务
 
 	http.Handle("/metrics", promhttp.Handler())
 	go func() {

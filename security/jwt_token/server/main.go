@@ -9,9 +9,10 @@ import (
 	"sync"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/zhufuyi/grpc_examples/security/jwt_token/proto"
+	"github.com/zhufuyi/grpc_examples/include"
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
 	"github.com/zhufuyi/grpc_examples/swagger"
+
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"github.com/zhufuyi/pkg/grpc/middleware"
@@ -188,7 +189,7 @@ func webServer() {
 
 	// 注册swagger路由
 	prefixPath := "/token/"
-	router := swagger.Router(prefixPath, proto.Path("accountpb/account.swagger.json"))
+	router := swagger.Router(prefixPath, include.Path("../security/jwt_token/proto/accountpb/account.swagger.json"))
 	mux.Handle(prefixPath, router) // 必须以/结尾的路径
 
 	fmt.Println("start web server ", webAddr)

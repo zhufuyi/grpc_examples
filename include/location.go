@@ -13,10 +13,10 @@ func init() {
 }
 
 // Path 返回绝对路径
-func Path(rel string) string {
-	if filepath.IsAbs(rel) {
-		return rel
+func Path(relative string) string {
+	if filepath.IsAbs(relative) {
+		return relative
 	}
 
-	return filepath.Join(basePath, rel)
+	return filepath.Join(basePath, relative)
 }

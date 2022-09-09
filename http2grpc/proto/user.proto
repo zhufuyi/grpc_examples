@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package user.v1;
+
+// 把google/api/annotations.proto和protoc-gen-openapiv2/options/annotations.proto文件存放在protoc的同级目录include下
+// protoc默认从同级目录include下查找
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// 设置生成*go的包名
+option go_package = "./pb;pb";
+
+
+// 生成*.swagger.json文件的一些默认设置
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "2.0";
+  };
+  // 显示扩展文档
+  external_docs: {
+    url: "https://github.com/zhufuyi/grpc_examples";
+    description: "grpc examples";
+  }
+  // 默认为HTTPS，根据实际需要设置
+  schemes: HTTP;
+  schemes: HTTPS;
+
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+    // http设置
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "创建用户",
+      description: "create one User",
+      tags: "user",
+    };
+  }
+
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    // http设置
+    option (google.api.http) = {
+      get: "/v1/user/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "获取用户详情",
+      description: "get one user",
+      tags: "user",
+    };
+  }
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+}
+
+message CreateUserReply {
+  int64 id = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserReply {
+  User user = 1;
+}
