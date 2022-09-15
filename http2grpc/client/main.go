@@ -41,7 +41,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewUserServiceClient(conn)
 

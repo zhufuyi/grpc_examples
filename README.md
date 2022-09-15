@@ -28,7 +28,7 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 go install github.com/envoyproxy/protoc-gen-validate@v0.6.7
 go install github.com/mohuishou/protoc-gen-go-gin@v0.1.0
 
-# download pugin protoc-gen-grpc-gateway,protoc-gen-openapiv2 url, total 2 files.
+# download plugin protoc-gen-grpc-gateway,protoc-gen-openapiv2 url, total 2 files.
 https://github.com/grpc-ecosystem/grpc-gateway/releases/tag/v2.10.1
 ```
 

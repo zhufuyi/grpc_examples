@@ -5,19 +5,21 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
+
+	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
 
-type Geek struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *Geek) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
+// SayHello method
+func (g *greeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
 	return &pb.HelloReply{Message: "hello " + request.Name}, nil
 }
 
@@ -59,7 +61,7 @@ func main() {
 
 	s := grpc.NewServer(getServerOptions()...)
 
-	pb.RegisterGreeterServer(s, &Geek{})
+	pb.RegisterGreeterServer(s, &greeterServer{})
 
 	err = s.Serve(list)
 	if err != nil {

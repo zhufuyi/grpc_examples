@@ -8,14 +8,15 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/waitForReady/proto/hellopb"
+
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	// 随机延时0~1000毫秒
 	time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 
@@ -33,7 +34,7 @@ func main() {
 
 	server := grpc.NewServer()
 
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	err = server.Serve(list)
 	if err != nil {

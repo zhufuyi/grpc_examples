@@ -3,9 +3,9 @@ package routers
 import (
 	"github.com/zhufuyi/grpc_examples/include"
 	"github.com/zhufuyi/grpc_examples/swagger"
-	"github.com/zhufuyi/pkg/gin/middleware"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zhufuyi/pkg/gin/middleware"
 	"github.com/zhufuyi/pkg/logger"
 )
 

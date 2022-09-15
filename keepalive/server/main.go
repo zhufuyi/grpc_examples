@@ -6,15 +6,16 @@ import (
 	"net"
 
 	pb "github.com/zhufuyi/grpc_examples/keepalive/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/keepalive"
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
 
@@ -33,7 +34,7 @@ func main() {
 
 	server := grpc.NewServer(options...)
 
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	err = server.Serve(list)
 	if err != nil {

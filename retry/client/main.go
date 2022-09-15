@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/retry/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/middleware"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/zhufuyi/pkg/grpc/interceptor"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 func sayHello(client pb.GreeterClient) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second) //nolint
 	defer cancel()
 
 	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
@@ -34,7 +35,7 @@ func getDialOptions() []grpc.DialOption {
 	// 重试
 	option := grpc.WithUnaryInterceptor(
 		grpc_middleware.ChainUnaryClient(
-			middleware.UnaryClientRetry(), // 可以修改默认重试次数、重试时间间隔、触发重试错误码
+			interceptor.UnaryClientRetry(), // 可以修改默认重试次数、重试时间间隔、触发重试错误码
 		),
 	)
 	options = append(options, option)
@@ -44,6 +45,9 @@ func getDialOptions() []grpc.DialOption {
 
 func main() {
 	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	if err != nil {
+		panic(err)
+	}
 
 	client := pb.NewGreeterClient(conn)
 

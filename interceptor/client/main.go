@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/interceptor/proto/hellopb"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -21,6 +22,7 @@ func sayHello(client pb.GreeterClient, name string) error {
 	return nil
 }
 
+// Timeout 超时拦截器
 func Timeout(ctx context.Context, method string, req, resp interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	var cancel context.CancelFunc
 	if _, ok := ctx.Deadline(); !ok {
@@ -55,7 +57,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 

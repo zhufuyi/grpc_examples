@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/ratelimit/token_bucket/proto/hellopb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -26,7 +27,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 

@@ -9,15 +9,16 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/helloworld/proto/hellopb"
+
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
 // 一元RPC
-func (g *GreeterServer) UnarySayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) UnarySayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
 	fmt.Println("unarySayHello receive: " + req.Name)
 	msg := "hello " + req.Name
 	fmt.Println("unarySayHello send   : " + msg)
@@ -25,7 +26,7 @@ func (g *GreeterServer) UnarySayHello(ctx context.Context, req *pb.HelloRequest)
 }
 
 // 服务端流式RPC
-func (g *GreeterServer) ServerStreamingSayHello(req *pb.HelloRequest, stream pb.Greeter_ServerStreamingSayHelloServer) error {
+func (g *greeterServer) ServerStreamingSayHello(req *pb.HelloRequest, stream pb.Greeter_ServerStreamingSayHelloServer) error {
 	recValues := req.Name
 	sendValues := []string{}
 
@@ -48,7 +49,7 @@ func (g *GreeterServer) ServerStreamingSayHello(req *pb.HelloRequest, stream pb.
 }
 
 // 客户端流式RPC
-func (g *GreeterServer) ClientStreamingSayHello(stream pb.Greeter_ClientStreamingSayHelloServer) error {
+func (g *greeterServer) ClientStreamingSayHello(stream pb.Greeter_ClientStreamingSayHelloServer) error {
 	recValues := []string{}
 	sendValues := ""
 
@@ -73,12 +74,10 @@ func (g *GreeterServer) ClientStreamingSayHello(stream pb.Greeter_ClientStreamin
 
 		recValues = append(recValues, resp.Name)
 	}
-
-	return nil
 }
 
 // 双向流式RPC
-func (g *GreeterServer) BidirectionalStreamingSayHello(stream pb.Greeter_BidirectionalStreamingSayHelloServer) error {
+func (g *greeterServer) BidirectionalStreamingSayHello(stream pb.Greeter_BidirectionalStreamingSayHelloServer) error {
 	recValues := []string{}
 	sendValues := []string{}
 
@@ -87,8 +86,10 @@ func (g *GreeterServer) BidirectionalStreamingSayHello(stream pb.Greeter_Bidirec
 		fmt.Println("bidirectionalStreamingSayHello send   : ", sendValues)
 	}()
 
+	var resp *pb.HelloRequest
+	var err error
 	for {
-		resp, err := stream.Recv()
+		resp, err = stream.Recv()
 		if err != nil {
 			if err == io.EOF { // 判断是否数据流结束
 				return nil
@@ -104,8 +105,6 @@ func (g *GreeterServer) BidirectionalStreamingSayHello(stream pb.Greeter_Bidirec
 		}
 		sendValues = append(sendValues, sendMsg)
 	}
-
-	return nil
 }
 
 func main() {
@@ -122,7 +121,7 @@ func main() {
 	server := grpc.NewServer()
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

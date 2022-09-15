@@ -8,16 +8,17 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/hystrix/baseuse/proto/hellopb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	n := rand.Intn(100)
 	if n%3 == 0 { // 大约30%概率出错
 		time.Sleep(time.Millisecond * 3)
@@ -42,7 +43,7 @@ func main() {
 	server := grpc.NewServer()
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/hystrix/withMetrics/proto/hellopb"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/zhufuyi/pkg/grpc/hystrix"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -52,15 +53,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 
 	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
-		if err := sayHello(client); err != nil {
+		if err = sayHello(client); err != nil {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			_, _ = w.Write([]byte(err.Error()))
 		}
 	})
 

@@ -11,12 +11,13 @@ import (
 
 const userServerAddr = "127.0.0.1:9090"
 
+// NewUserClient user客户端
 func NewUserClient() userPB.UserServiceClient {
 	conn, err := grpc.Dial(userServerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
 	logger.Info("connect to 'user' rpc server successfully.", logger.String("addr", userServerAddr), logger.String("status", conn.GetState().String()))
-	conn.GetState().String()
+
 	return userPB.NewUserServiceClient(conn)
 }

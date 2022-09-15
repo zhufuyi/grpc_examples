@@ -6,17 +6,18 @@ import (
 	"net"
 	"time"
 
+	pb "github.com/zhufuyi/grpc_examples/ratelimit/token_bucket/proto/hellopb"
+
 	"github.com/grpc-ecosystem/go-grpc-middleware/ratelimit"
 	"github.com/reugn/equalizer"
-	pb "github.com/zhufuyi/grpc_examples/ratelimit/token_bucket/proto/hellopb"
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	return &pb.HelloReply{Message: time.Now().Format("2006-01-02T15:04:05.000000") + " hello " + r.Name}, nil
 }
 
@@ -60,7 +61,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -14,7 +15,7 @@ import (
 
 const serverName = "hello-demo"
 
-var etcdAddrs = []string{"192.168.3.36:2379"}
+var etcdAddrs = []string{"192.168.3.37:2379"}
 
 func sayHello(client pb.GreeterClient) error {
 	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "foo"})

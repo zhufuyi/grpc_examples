@@ -8,14 +8,14 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/zhufuyi/grpc_examples/include"
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
 	"github.com/zhufuyi/grpc_examples/swagger"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
-	"github.com/zhufuyi/pkg/grpc/middleware"
+	"github.com/zhufuyi/pkg/grpc/interceptor"
 	"github.com/zhufuyi/pkg/jwt"
 	"github.com/zhufuyi/pkg/snowflake"
 	"google.golang.org/grpc"
@@ -31,28 +31,27 @@ const (
 
 var isUseTLS bool // 是否开启TLS加密
 
-type Account struct {
+type accountServer struct {
 	pb.UnimplementedAccountServer
-	middleware.SkipAuthMethod // 实现AuthFuncOverride方法，跳过认证路由
-	m                         *sync.Map
+	m *sync.Map
 }
 
 type userInfo struct {
-	ID       int64
-	Name     string
-	Password string
-	Email    string
-	Token    string
+	ID            int64
+	Name          string
+	Password      string
+	Email         string
+	Authorization string
 }
 
-func (a *Account) getUserFromID(id int64) *userInfo {
+func (a *accountServer) getUserFromID(id int64) *userInfo {
 	if userInfoVal, ok := a.m.Load(id); ok {
 		return userInfoVal.(*userInfo)
 	}
 	return nil
 }
 
-func (a *Account) getUserFromName(name string) *userInfo {
+func (a *accountServer) getUserFromName(name string) *userInfo {
 	if id, ok := a.m.Load(name); ok {
 		if userInfoVal, ok := a.m.Load(id); ok {
 			return userInfoVal.(*userInfo)
@@ -61,15 +60,16 @@ func (a *Account) getUserFromName(name string) *userInfo {
 	return nil
 }
 
-func (a *Account) saveUser(u *userInfo) {
+func (a *accountServer) saveUser(u *userInfo) {
 	a.m.LoadOrStore(u.ID, u)
 	a.m.LoadOrStore(u.Name, u.ID)
 }
 
-func (a *Account) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterReply, error) {
+// Register 注册
+func (a *accountServer) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterReply, error) {
 	uinfo := a.getUserFromName(req.Name)
 	if uinfo != nil {
-		return &pb.RegisterReply{Id: uinfo.ID, Token: uinfo.Token}, nil
+		return &pb.RegisterReply{Id: uinfo.ID, Authorization: uinfo.Authorization}, nil
 	}
 
 	// 生成id
@@ -80,17 +80,17 @@ func (a *Account) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "generate token error %v", err)
 	}
-	token = middleware.GetAuthScheme() + " " + token
+	authorization := interceptor.GetAuthorization(token)
 	//fmt.Printf("create user uid:%s %v token:%s \n", uid, req, token)
 
 	a.saveUser(&userInfo{id, req.Name, req.Password, req.Name + "@bar.com", token})
 
 	fmt.Printf("save data: %+v\n", a.getUserFromID(id))
-	return &pb.RegisterReply{Id: id, Token: token}, nil
+	return &pb.RegisterReply{Id: id, Authorization: authorization}, nil
 }
 
-// GetUser 需要鉴权
-func (a *Account) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
+// GetUser 获取用详情，需要鉴权
+func (a *accountServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	//uid := metautils.ExtractIncoming(ctx).Get("uid")            // 这是从header获取
 	tokenInfo, ok := ctx.Value("tokenInfo").(*jwt.CustomClaims) // 从拦截器设置值读取
 	if !ok {
@@ -98,7 +98,7 @@ func (a *Account) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetU
 	}
 
 	uid := strconv.FormatInt(req.Id, 10)
-	if tokenInfo.Uid != uid {
+	if tokenInfo.UID != uid {
 		return nil, status.Errorf(codes.InvalidArgument, "the token uid and the parameter uid do not match")
 	}
 
@@ -128,14 +128,15 @@ func getServerOptions(isUseTLS bool) []grpc.ServerOption {
 	}
 
 	// token鉴权
-	options = append(options, grpc.UnaryInterceptor(middleware.UnaryServerJwtAuth()))
+	options = append(options, grpc.UnaryInterceptor(interceptor.UnaryServerJwtAuth(
+		interceptor.WithAuthIgnoreMethods("/proto.accountServer/Register"), // 添加忽略token验证的方法
+	)))
 
 	return options
 }
 
 func grpcServer() {
 	fmt.Println("start rpc server", grpcAddr)
-	middleware.AddSkipMethods("/proto.Account/Register") // 添加忽略token验证的方法，从pb文件的fullMethodName
 
 	listen, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
@@ -144,7 +145,7 @@ func grpcServer() {
 
 	server := grpc.NewServer(getServerOptions(isUseTLS)...)
 
-	pb.RegisterAccountServer(server, &Account{m: new(sync.Map)})
+	pb.RegisterAccountServer(server, &accountServer{m: new(sync.Map)})
 
 	err = server.Serve(listen)
 	if err != nil {
@@ -196,7 +197,8 @@ func webServer() {
 	if !isUseTLS {
 		err = http.ListenAndServe(webAddr, mux)
 	} else {
-		err = http.ListenAndServeTLS(webAddr, certfile.Path("one-way/server.crt"), certfile.Path("one-way/server.key"), mux) // 浏览器不信任证书，报错 http: TLS handshake error from 127.0.0.1:2358: remote error: tls: unknown certificate
+		// 浏览器不信任证书，报错 http: TLS handshake error from 127.0.0.1:2358: remote error: tls: unknown certificate
+		err = http.ListenAndServeTLS(webAddr, certfile.Path("one-way/server.crt"), certfile.Path("one-way/server.key"), mux)
 	}
 	if err != nil {
 		panic(err)
@@ -210,7 +212,7 @@ func main() {
 	// 初始jwt
 	jwt.Init()
 	// 设置用户id生成器
-	snowflake.Init(1)
+	_ = snowflake.Init(1)
 
 	go grpcServer()
 

@@ -3,18 +3,22 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 
+	"github.com/zhufuyi/pkg/grpc/grpccli"
+	"github.com/zhufuyi/pkg/logger"
+	"github.com/zhufuyi/pkg/registry"
+	"github.com/zhufuyi/pkg/registry/etcd"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/resolver"
 )
 
 const serverName = "hello-demo"
 
-var etcdAddrs = []string{"192.168.3.36:2379"}
+var etcdAddrs = []string{"192.168.3.37:2379"}
 
 func sayHello(client pb.GreeterClient) error {
 	resp, err := client.SayHello(context.Background(), &pb.HelloRequest{Name: "foo"})
@@ -26,26 +30,30 @@ func sayHello(client pb.GreeterClient) error {
 	return nil
 }
 
-func getDialOptions() []grpc.DialOption {
-	var options []grpc.DialOption
+func discoveryETCD(endpoints []string) registry.Discovery {
+	cli, err := clientv3.New(clientv3.Config{
+		Endpoints:   endpoints,
+		DialTimeout: 10 * time.Second,
+		DialOptions: []grpc.DialOption{
+			grpc.WithBlock(),
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
 
-	// 禁止tls加密
-	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
-
-	return options
+	return etcd.New(cli)
 }
 
 func main() {
-	// 使用etcd服务发现
-	r := discovery.NewResolver(etcdAddrs)
-	//r := discovery.NewResolver( // 自定义设置方式
-	//	etcdAddrs,
-	//	discovery.WithDialTimeout(5),
-	//	discovery.WithLogger(zap.NewExample()),
-	//)
-	resolver.Register(r)
-
-	conn, err := grpc.Dial("etcd:///"+serverName, getDialOptions()...)
+	endpoint := "discovery:///" + serverName
+	iDiscovery := discoveryETCD(etcdAddrs)
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*3) //nolint
+	conn, err := grpccli.DialInsecure(ctx, endpoint,
+		grpccli.WithEnableLog(logger.Get()),
+		grpccli.WithDiscovery(iDiscovery),
+	)
 	if err != nil {
 		panic(err)
 	}

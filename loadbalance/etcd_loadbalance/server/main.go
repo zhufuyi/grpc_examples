@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
 	"google.golang.org/grpc"
 )
@@ -18,15 +19,15 @@ const (
 )
 
 var (
-	etcdAddrs = []string{"192.168.3.36:2379"}
+	etcdAddrs = []string{"192.168.3.37:2379"}
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 	addr string
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	message := fmt.Sprintf("hello %s, (from %s)", r.Name, g.addr)
 	return &pb.HelloReply{Message: message}, nil
 }
@@ -41,7 +42,7 @@ func startServer(addr string) {
 	}
 
 	server := grpc.NewServer()
-	pb.RegisterGreeterServer(server, &GreeterServer{addr: addr})
+	pb.RegisterGreeterServer(server, &greeterServer{addr: addr})
 
 	err = server.Serve(list)
 	if err != nil {

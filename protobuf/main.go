@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/golang/protobuf/proto"
 	pb "github.com/zhufuyi/grpc_examples/protobuf/proto/userpb"
+
+	"google.golang.org/protobuf/proto"
 )
 
 func main() {

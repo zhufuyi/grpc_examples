@@ -7,7 +7,9 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/metrics/clientMetrics"
+
+	"github.com/zhufuyi/pkg/grpc/interceptor"
+	"github.com/zhufuyi/pkg/grpc/metrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -29,15 +31,18 @@ func getDialOptions() []grpc.DialOption {
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// Metrics
-	options = append(options, grpc.WithUnaryInterceptor(clientMetrics.UnaryClientMetrics()))
-	options = append(options, grpc.WithStreamInterceptor(clientMetrics.StreamClientMetrics()))
+	options = append(options, grpc.WithUnaryInterceptor(interceptor.UnaryClientMetrics()))
+	options = append(options, grpc.WithStreamInterceptor(interceptor.StreamClientMetrics()))
 	return options
 }
 
 func main() {
 	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	if err != nil {
+		panic(err)
+	}
 
-	clientMetrics.Serve(":9094")
+	metrics.ClientHTTPService(":9094")
 	fmt.Println("start metrics server", ":9094")
 
 	client := pb.NewGreeterClient(conn)

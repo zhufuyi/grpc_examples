@@ -19,16 +19,18 @@ const (
 	timestampFormat = "2006-01-02T15:04:05.000000"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	// return之后创建新的metadata
 	defer func() {
 		trailer := metadata.Pairs("timestamp", time.Now().Format(timestampFormat)+"S2")
-		grpc.SetTrailer(ctx, trailer)
-		fmt.Println()
+		err := grpc.SetTrailer(ctx, trailer)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}()
 
 	// 从client读取metadata
@@ -43,7 +45,7 @@ func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 		"hello":     "world",
 		"timestamp": time.Now().Format(timestampFormat) + "S1",
 	})
-	grpc.SendHeader(ctx, header)
+	_ = grpc.SendHeader(ctx, header)
 
 	// 随机延时0~1000微秒
 	time.Sleep(time.Duration(rand.Intn(1000)) * time.Microsecond)
@@ -70,7 +72,7 @@ func main() {
 
 	server := grpc.NewServer()
 
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	err = server.Serve(list)
 	if err != nil {

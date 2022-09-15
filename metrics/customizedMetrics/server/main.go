@@ -7,11 +7,13 @@ import (
 	"net"
 	"time"
 
+	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
+
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/prometheus/client_golang/prometheus"
-	pb "github.com/zhufuyi/grpc_examples/metrics/customizedMetrics/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/metrics/serverMetrics"
+	"github.com/zhufuyi/pkg/grpc/interceptor"
+	"github.com/zhufuyi/pkg/grpc/metrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -41,11 +43,11 @@ func counterMetricInc(ctx context.Context, counter *prometheus.CounterVec) {
 	counter.WithLabelValues(serverNameLabelValue, envLabelValue).Inc() // values 一一对应key
 }
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	n := rand.Intn(100)
 	switch {
 	case n%10 == 0: // 大概10%错误率
@@ -60,6 +62,7 @@ func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
 
+// UnaryServerLabels 设置标签拦截器
 func UnaryServerLabels(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	// 设置prometheus公共标签
 	tag := grpc_ctxtags.NewTags().
@@ -73,16 +76,15 @@ func UnaryServerLabels(ctx context.Context, req interface{}, info *grpc.UnarySer
 func getServerOptions() []grpc.ServerOption {
 	var options []grpc.ServerOption
 
-	serverMetrics.AddCounterMetrics(customizedCounterMetric) // 添加自定义指标
 	// metrics拦截器
 	option := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
-		//UnaryServerLabels,                  // 标签
-		serverMetrics.UnaryServerMetrics(), // 一元rpc的metrics拦截器
+		UnaryServerLabels,                // 标签
+		interceptor.UnaryServerMetrics(), // 一元rpc的metrics拦截器
 	))
 	options = append(options, option)
 
 	option = grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
-		serverMetrics.StreamServerMetrics(), // 流式rpc的metrics拦截器
+		interceptor.StreamServerMetrics(), // 流式rpc的metrics拦截器
 	))
 	options = append(options, option)
 
@@ -101,10 +103,10 @@ func main() {
 	}
 
 	server := grpc.NewServer(getServerOptions()...)
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 启动metrics服务器，默认采集grpc指标，开启、go指标
-	serverMetrics.Serve(":9092", server)
+	metrics.GoHTTPService(":9092", server)
 	fmt.Println("start metrics server", ":9092")
 
 	err = server.Serve(list)

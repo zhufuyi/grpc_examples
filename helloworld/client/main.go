@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/helloworld/proto/hellopb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -52,7 +53,7 @@ func clientStreamingSayHello(client pb.GreeterClient) error {
 
 	names := []string{"foo1", "foo2", "foo3"}
 	for _, name := range names {
-		err := stream.Send(&pb.HelloRequest{Name: name})
+		err = stream.Send(&pb.HelloRequest{Name: name})
 		if err != nil {
 			return err
 		}
@@ -75,13 +76,14 @@ func bidirectionalStreamingSayHello(client pb.GreeterClient) error {
 	}
 
 	names := []string{"foo1", "foo2", "foo3"}
+	var resp *pb.HelloReply
 	for _, name := range names {
-		err := stream.Send(&pb.HelloRequest{Name: name})
+		err = stream.Send(&pb.HelloRequest{Name: name})
 		if err != nil {
 			return err
 		}
 
-		resp, err := stream.Recv()
+		resp, err = stream.Recv()
 		if err != nil {
 			if err == io.EOF {
 				break

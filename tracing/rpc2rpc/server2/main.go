@@ -8,22 +8,23 @@ import (
 
 	"github.com/zhufuyi/grpc_examples/tracing"
 	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/middleware"
+
+	"github.com/zhufuyi/pkg/grpc/interceptor"
 	"github.com/zhufuyi/pkg/tracer"
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
 // SayHi 一元RPC
-func (g *GreeterServer) SayHi(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHi(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	time.Sleep(time.Millisecond * 15)
 	resp := &pb.HelloReply{Message: "hi " + r.Name}
 	fmt.Printf("resp: %s\n", resp.Message)
 
-	tracing.SpanDemo("sayHi", ctx) // 模拟创建一个span
+	tracing.SpanDemo(ctx, "sayHi") // 模拟创建一个span
 
 	return resp, nil
 }
@@ -33,7 +34,7 @@ func getServerOptions() []grpc.ServerOption {
 
 	// 链路跟踪拦截器
 	options = append(options, grpc.UnaryInterceptor(
-		middleware.UnaryServerTracing(),
+		interceptor.UnaryServerTracing(),
 	))
 
 	return options
@@ -41,7 +42,7 @@ func getServerOptions() []grpc.ServerOption {
 
 func main() {
 	tracing.InitTrace("hello-server2")
-	defer tracer.Close(context.Background())
+	defer tracer.Close(context.Background()) //nolint
 
 	addr := ":8081"
 	fmt.Println("start rpc server", addr)
@@ -56,7 +57,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

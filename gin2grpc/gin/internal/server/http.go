@@ -1,11 +1,12 @@
 package server
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/zhufuyi/grpc_examples/gin2grpc/gin/api/user/v1/pb"
 	"github.com/zhufuyi/grpc_examples/gin2grpc/gin/internal/routers"
 	"github.com/zhufuyi/grpc_examples/gin2grpc/gin/internal/service"
-	"net/http"
-	"time"
 )
 
 // NewHTTPServer creates a new web server

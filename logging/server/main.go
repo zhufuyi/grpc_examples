@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/zhufuyi/pkg/grpc/interceptor"
+
 	pb "github.com/zhufuyi/grpc_examples/logging/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/zhufuyi/pkg/grpc/middleware"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
 var logger *zap.Logger
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
 
@@ -30,8 +31,8 @@ func getServerOptions() []grpc.ServerOption {
 	//middleware.AddLoggingFields(map[string]interface{}{"hello": "world"}) // 添加打印自定义字段
 	//middleware.AddSkipLoggingMethods("/proto.Greeter/SayHello") // 跳过打印调用的方法
 	options = append(options, grpc_middleware.WithUnaryServerChain(
-		middleware.UnaryServerCtxTags(),
-		middleware.UnaryServerZapLogging(logger),
+		interceptor.UnaryServerCtxTags(),
+		interceptor.UnaryServerLog(logger),
 	))
 
 	return options
@@ -53,7 +54,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

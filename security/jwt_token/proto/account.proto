@@ -86,7 +86,7 @@ message RegisterRequest {
 
 message RegisterReply {
   int64 id =1;
-  string token = 2;
+  string authorization = 2;
 }
 
 message GetUserRequest {

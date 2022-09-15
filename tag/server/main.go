@@ -7,14 +7,15 @@ import (
 	"reflect"
 
 	pb "github.com/zhufuyi/grpc_examples/tag/proto/hellopb"
+
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	t := reflect.TypeOf(*r)
 
 	for i := 0; i < t.NumField(); i++ {
@@ -45,7 +46,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

@@ -10,6 +10,7 @@
     }
   ],
   "schemes": [
+    "http",
     "https"
   ],
   "consumes": [
@@ -110,7 +111,7 @@
           "type": "string",
           "format": "int64"
         },
-        "token": {
+        "authorization": {
           "type": "string"
         }
       }

@@ -7,16 +7,18 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/validate/proto/accountpb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type AccountServer struct {
+type accountServer struct {
 	pb.UnimplementedAccountServer
 }
 
-func (g *AccountServer) Login(ctx context.Context, r *pb.LoginRequest) (*pb.LoginReply, error) {
+// Login 登录
+func (g *accountServer) Login(ctx context.Context, r *pb.LoginRequest) (*pb.LoginReply, error) {
 	err := r.Validate()
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -48,7 +50,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterAccountServer(server, &AccountServer{})
+	pb.RegisterAccountServer(server, &accountServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

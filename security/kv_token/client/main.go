@@ -5,24 +5,27 @@ import (
 	"fmt"
 
 	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 )
 
-type MyToken struct {
+type myToken struct {
 	AppID  string
 	AppKey string
 }
 
-func (m *MyToken) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
+// GetRequestMetadata 获取请求元数据
+func (m *myToken) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
 	return map[string]string{
 		"app_id":  m.AppID,
 		"app_key": m.AppKey,
 	}, nil
 }
 
-func (m *MyToken) RequireTransportSecurity() bool {
+// RequireTransportSecurity 是否安全传输
+func (m *myToken) RequireTransportSecurity() bool {
 	return true
 }
 
@@ -37,7 +40,7 @@ func getDialOptions() []grpc.DialOption {
 	options = append(options, grpc.WithTransportCredentials(credentials))
 
 	// token
-	options = append(options, grpc.WithPerRPCCredentials(&MyToken{"grpc", "123456"}))
+	options = append(options, grpc.WithPerRPCCredentials(&myToken{"grpc", "123456"}))
 
 	return options
 }
@@ -47,7 +50,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 

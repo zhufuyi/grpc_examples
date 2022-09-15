@@ -6,13 +6,14 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/timeout/proto/hellopb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 func sayHello(client pb.GreeterClient) error {
 	to := time.Millisecond * 200
-	ctx, _ := context.WithTimeout(context.Background(), to)
+	ctx, _ := context.WithTimeout(context.Background(), to) //nolint
 
 	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
@@ -34,6 +35,9 @@ func getDialOptions() []grpc.DialOption {
 
 func main() {
 	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	if err != nil {
+		panic(err)
+	}
 
 	client := pb.NewGreeterClient(conn)
 

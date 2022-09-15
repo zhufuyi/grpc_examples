@@ -7,15 +7,16 @@ import (
 	"sync"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
+
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 	addr string
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	message := fmt.Sprintf("hello %s, (from %s)", r.Name, g.addr)
 	return &pb.HelloReply{Message: message}, nil
 }
@@ -30,7 +31,7 @@ func startServer(addr string) {
 	}
 
 	server := grpc.NewServer()
-	pb.RegisterGreeterServer(server, &GreeterServer{addr: addr})
+	pb.RegisterGreeterServer(server, &greeterServer{addr: addr})
 
 	err = server.Serve(list)
 	if err != nil {

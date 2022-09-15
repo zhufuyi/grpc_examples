@@ -6,6 +6,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/loadbalance"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

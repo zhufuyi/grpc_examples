@@ -8,20 +8,21 @@ import (
 	"net/http"
 	"time"
 
+	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
+
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	n := rand.Intn(100)
 	switch {
 	case n%10 == 0: // 大概10%错误率
@@ -76,7 +77,7 @@ func main() {
 	}
 
 	server := grpc.NewServer(getServerOptions()...)
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 启动metrics服务器，默认采集grpc指标，开启RPCs处理时间的记录、go指标
 	defaultDefaultServer(":9092", server)

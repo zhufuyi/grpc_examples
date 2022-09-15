@@ -2,23 +2,26 @@ package service
 
 import (
 	"context"
+
 	"github.com/zhufuyi/grpc_examples/gin2grpc/gin/api/user/v1/pb"
 	userPB "github.com/zhufuyi/grpc_examples/gin2grpc/rpc-server/api/user/v1/pb"
 )
 
 var (
-	_ pb.UserServiceHTTPServer = (*UserServiceServer)(nil)
+	_ pb.UserServiceHTTPServer = (*userServiceServer)(nil)
 )
 
-type UserServiceServer struct {
+type userServiceServer struct {
 	userRPCCli userPB.UserServiceClient
 }
 
+// NewUserServiceServer 实现接口
 func NewUserServiceServer(cli userPB.UserServiceClient) pb.UserServiceHTTPServer {
-	return &UserServiceServer{userRPCCli: cli}
+	return &userServiceServer{userRPCCli: cli}
 }
 
-func (s UserServiceServer) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
+// CreateUser 创建用户
+func (s userServiceServer) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	in := &userPB.CreateUserRequest{
 		Name:  request.Name,
 		Email: request.Email,
@@ -32,7 +35,8 @@ func (s UserServiceServer) CreateUser(ctx context.Context, request *pb.CreateUse
 	return &pb.CreateUserReply{Id: out.Id}, nil
 }
 
-func (s UserServiceServer) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserReply, error) {
+// GetUser 获取用户详情
+func (s userServiceServer) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	in := &userPB.GetUserRequest{
 		Id: request.Id,
 	}

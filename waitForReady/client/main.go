@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/waitForReady/proto/hellopb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,7 +21,7 @@ func sayHello(ctx context.Context, client pb.GreeterClient, i int) error {
 		return fmt.Errorf("%s, %v", name, err)
 	}
 
-	fmt.Println(resp.Message, time.Now().Sub(now).String())
+	fmt.Println(resp.Message, time.Since(now).String())
 	return nil
 }
 
@@ -33,12 +34,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 
 	// 请求超过800毫秒超时
-	ctx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Millisecond*800))
+	ctx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Millisecond*800)) //nolint
 	wg := &sync.WaitGroup{}
 
 	// 同时并发5个请求，服务端做了随机0~1000毫秒延时

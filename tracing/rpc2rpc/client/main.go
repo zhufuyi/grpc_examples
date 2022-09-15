@@ -7,7 +7,8 @@ import (
 
 	"github.com/zhufuyi/grpc_examples/tracing"
 	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
-	"github.com/zhufuyi/pkg/grpc/middleware"
+
+	"github.com/zhufuyi/pkg/grpc/interceptor"
 	"github.com/zhufuyi/pkg/tracer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -31,7 +32,7 @@ func getDialOptions() []grpc.DialOption {
 
 	// tracing跟踪
 	options = append(options, grpc.WithUnaryInterceptor(
-		middleware.UnaryClientTracing(),
+		interceptor.UnaryClientTracing(),
 	))
 
 	return options
@@ -39,7 +40,7 @@ func getDialOptions() []grpc.DialOption {
 
 func main() {
 	tracing.InitTrace("hello-client")
-	defer tracer.Close(context.Background())
+	defer tracer.Close(context.Background()) //nolint
 
 	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
 	if err != nil {

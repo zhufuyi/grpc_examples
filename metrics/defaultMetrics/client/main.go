@@ -7,9 +7,10 @@ import (
 	"strconv"
 	"time"
 
+	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
+
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	pb "github.com/zhufuyi/grpc_examples/metrics/defaultMetrics/proto/hellopb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -56,6 +57,9 @@ func getDialOptions() []grpc.DialOption {
 func main() {
 	grpc_prometheus.EnableHandlingTimeHistogram()
 	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	if err != nil {
+		panic(err)
+	}
 
 	defaultDefaultServer(":9094")
 

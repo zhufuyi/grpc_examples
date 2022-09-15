@@ -5,17 +5,18 @@ import (
 	"fmt"
 	"net"
 
+	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
-	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 	"google.golang.org/grpc"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	fmt.Println("\nSayHello receive req: " + r.Name)
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
@@ -50,7 +51,7 @@ func main() {
 	server := grpc.NewServer(opts...)
 
 	// grpc的server内部服务和路由
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 调用服务器执行阻塞等待客户端
 	err = server.Serve(list)

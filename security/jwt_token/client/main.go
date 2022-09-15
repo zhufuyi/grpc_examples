@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	pb "github.com/zhufuyi/grpc_examples/security/jwt_token/proto/accountpb"
+
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
@@ -28,7 +29,7 @@ func registerUser(client pb.AccountClient) (*pb.RegisterReply, error) {
 }
 
 func getUser(client pb.AccountClient, req *pb.RegisterReply) error {
-	md := metadata.Pairs("authorization", req.Token)
+	md := metadata.Pairs("authorization", req.Authorization)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 
 	resp, err := client.GetUser(ctx, &pb.GetUserRequest{Id: req.Id})
@@ -65,7 +66,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewAccountClient(conn)
 

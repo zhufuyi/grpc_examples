@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	pb "github.com/zhufuyi/grpc_examples/validate/proto/accountpb"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -12,7 +13,7 @@ import (
 func login(client pb.AccountClient, req *pb.LoginRequest) error {
 	resp, err := client.Login(context.Background(), req)
 	if err != nil {
-		return fmt.Errorf("%v\n", err)
+		return fmt.Errorf("%v", err)
 	}
 
 	fmt.Printf("login success, token=%s\n\n", resp.Token)
@@ -24,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewAccountClient(conn)
 

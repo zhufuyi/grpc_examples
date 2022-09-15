@@ -28,18 +28,20 @@ var (
 	autoCount int64 = 0
 	sm              = new(sync.Map)
 
-	_ pb.UserServiceServer = (*UserServiceServer)(nil)
+	_ pb.UserServiceServer = (*userServiceServer)(nil)
 )
 
-type UserServiceServer struct {
+type userServiceServer struct {
 	pb.UnimplementedUserServiceServer
 }
 
+// NewUserServiceServer  实现接口
 func NewUserServiceServer() pb.UserServiceServer {
-	return &UserServiceServer{}
+	return &userServiceServer{}
 }
 
-func (s UserServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
+// CreateUser 创建用户
+func (s userServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	id := atomic.AddInt64(&autoCount, 1)
 
 	sm.LoadOrStore(id, &pb.User{
@@ -51,7 +53,8 @@ func (s UserServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserReq
 	return &pb.CreateUserReply{Id: id}, nil
 }
 
-func (s UserServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
+// GetUser 获取用户详情
+func (s userServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	value, ok := sm.Load(req.Id)
 	if !ok {
 		return nil, status.Error(codes.NotFound, fmt.Sprintf("id %v not found", req.Id))

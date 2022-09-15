@@ -14,6 +14,7 @@ var (
 	sn = ""
 )
 
+// InitTrace 初始化链路跟踪
 func InitTrace(serviceName string) {
 	sn = serviceName
 	//exporter, _, err := tracer.NewFileExporter(serviceName + "-trace.json")
@@ -32,7 +33,8 @@ func InitTrace(serviceName string) {
 	tracer.Init(exporter, resource) // 默认采集全部
 }
 
-func SpanDemo(spanName string, ctx context.Context) {
+// SpanDemo 设置一个span
+func SpanDemo(ctx context.Context, spanName string) {
 	_, span := otel.Tracer(sn).Start(
 		ctx, spanName,
 		trace.WithAttributes(attribute.String(spanName, time.Now().String())),

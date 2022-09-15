@@ -6,6 +6,7 @@ import (
 	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
+
 	"github.com/zhufuyi/pkg/grpc/gtls"
 	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
@@ -42,7 +43,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint
 
 	client := pb.NewGreeterClient(conn)
 

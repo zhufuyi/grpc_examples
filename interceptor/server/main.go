@@ -6,18 +6,19 @@ import (
 	"net"
 	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	pb "github.com/zhufuyi/grpc_examples/interceptor/proto/hellopb"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type GreeterServer struct {
+type greeterServer struct {
 	pb.UnimplementedGreeterServer
 }
 
-func (g *GreeterServer) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
+func (g *greeterServer) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloReply, error) {
 	if req.Name == "" {
 		return nil, status.Errorf(codes.InvalidArgument, "name is empty")
 	}
@@ -70,7 +71,7 @@ func main() {
 	server := grpc.NewServer(getServerOptions()...)
 	defer server.Stop()
 
-	pb.RegisterGreeterServer(server, &GreeterServer{})
+	pb.RegisterGreeterServer(server, &greeterServer{})
 	if err != nil {
 		panic(err)
 	}

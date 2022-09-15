@@ -4,9 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/zhufuyi/grpc_examples/tracing"
 	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
+
+	"github.com/gin-gonic/gin"
 	"github.com/zhufuyi/pkg/gin/middleware"
 	"github.com/zhufuyi/pkg/tracer"
 )
@@ -32,9 +33,8 @@ func sayHello(c *gin.Context) {
 }
 
 func main() {
-
 	tracing.InitTrace(serviceName)
-	defer tracer.Close(context.Background())
+	defer tracer.Close(context.Background()) //nolint
 
 	// 连接rpc服务端
 	connectRPCServer(rpcAddr)
