@@ -10,6 +10,8 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -27,9 +29,8 @@ type HelloRequest struct {
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty" gorm:"name" bson:"name"`
 }
 
-func (m *HelloRequest) Reset()         { *m = HelloRequest{} }
-func (m *HelloRequest) String() string { return proto.CompactTextString(m) }
-func (*HelloRequest) ProtoMessage()    {}
+func (m *HelloRequest) Reset()      { *m = HelloRequest{} }
+func (*HelloRequest) ProtoMessage() {}
 func (*HelloRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_61ef911816e0a8ce, []int{0}
 }
@@ -71,9 +72,8 @@ type HelloReply struct {
 	Message string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 }
 
-func (m *HelloReply) Reset()         { *m = HelloReply{} }
-func (m *HelloReply) String() string { return proto.CompactTextString(m) }
-func (*HelloReply) ProtoMessage()    {}
+func (m *HelloReply) Reset()      { *m = HelloReply{} }
+func (*HelloReply) ProtoMessage() {}
 func (*HelloReply) Descriptor() ([]byte, []int) {
 	return fileDescriptor_61ef911816e0a8ce, []int{1}
 }
@@ -119,7 +119,7 @@ func init() {
 func init() { proto.RegisterFile("hello.proto", fileDescriptor_61ef911816e0a8ce) }
 
 var fileDescriptor_61ef911816e0a8ce = []byte{
-	// 215 bytes of a gzipped FileDescriptorProto
+	// 258 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0x48, 0xcd, 0xc9,
 	0xc9, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x52, 0x4a, 0xe9, 0xf9, 0xe9,
 	0xf9, 0xfa, 0x60, 0x76, 0x52, 0x69, 0x9a, 0x3e, 0x88, 0x07, 0xe6, 0x80, 0x59, 0x10, 0xa5, 0x4a,
@@ -130,12 +130,91 @@ var fileDescriptor_61ef911816e0a8ce = []byte{
 	0xec, 0xb9, 0xa9, 0xc5, 0xc5, 0x89, 0xe9, 0x50, 0x13, 0x82, 0x60, 0x5c, 0x23, 0x7b, 0x2e, 0x76,
 	0xf7, 0xa2, 0xd4, 0xd4, 0x92, 0xd4, 0x22, 0x21, 0x13, 0x2e, 0x8e, 0xe0, 0xc4, 0x4a, 0xb0, 0x2e,
 	0x21, 0x61, 0x88, 0x3b, 0xf4, 0x90, 0x1d, 0x21, 0x25, 0x88, 0x2a, 0x58, 0x90, 0x53, 0xa9, 0xc4,
-	0xe0, 0xa4, 0x7c, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e,
-	0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x9c, 0x7a, 0xfa,
-	0x60, 0xdf, 0x17, 0x24, 0x25, 0xb1, 0x81, 0x35, 0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x06,
-	0x63, 0xc0, 0xf9, 0x0f, 0x01, 0x00, 0x00,
+	0xe0, 0xe4, 0x7d, 0xe1, 0xa1, 0x1c, 0xc3, 0x8d, 0x87, 0x72, 0x0c, 0x1f, 0x1e, 0xca, 0x31, 0xfe,
+	0x78, 0x28, 0xc7, 0xd8, 0xf0, 0x48, 0x8e, 0x71, 0xc5, 0x23, 0x39, 0xc6, 0x1d, 0x8f, 0xe4, 0x18,
+	0x0f, 0x3c, 0x92, 0x63, 0x3c, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4,
+	0x18, 0x5f, 0x3c, 0x92, 0x63, 0xf8, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b, 0x8f,
+	0xe5, 0x18, 0x6e, 0x3c, 0x96, 0x63, 0x88, 0xe2, 0xd4, 0xd3, 0x07, 0x87, 0x52, 0x41, 0x52, 0x12,
+	0x1b, 0xd8, 0x02, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf3, 0xa9, 0x96, 0xa6, 0x37, 0x01,
+	0x00, 0x00,
 }
 
+func (this *HelloRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*HelloRequest)
+	if !ok {
+		that2, ok := that.(HelloRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Name != that1.Name {
+		return false
+	}
+	return true
+}
+func (this *HelloReply) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*HelloReply)
+	if !ok {
+		that2, ok := that.(HelloReply)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Message != that1.Message {
+		return false
+	}
+	return true
+}
+func (this *HelloRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&hellopb.HelloRequest{")
+	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *HelloReply) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&hellopb.HelloReply{")
+	s = append(s, "Message: "+fmt.Sprintf("%#v", this.Message)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func valueToGoStringHello(v interface{}, typ string) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
+}
 func (m *HelloRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -207,6 +286,94 @@ func encodeVarintHello(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func NewPopulatedHelloRequest(r randyHello, easy bool) *HelloRequest {
+	this := &HelloRequest{}
+	this.Name = string(randStringHello(r))
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+func NewPopulatedHelloReply(r randyHello, easy bool) *HelloReply {
+	this := &HelloReply{}
+	this.Message = string(randStringHello(r))
+	if !easy && r.Intn(10) != 0 {
+	}
+	return this
+}
+
+type randyHello interface {
+	Float32() float32
+	Float64() float64
+	Int63() int64
+	Int31() int32
+	Uint32() uint32
+	Intn(n int) int
+}
+
+func randUTF8RuneHello(r randyHello) rune {
+	ru := r.Intn(62)
+	if ru < 10 {
+		return rune(ru + 48)
+	} else if ru < 36 {
+		return rune(ru + 55)
+	}
+	return rune(ru + 61)
+}
+func randStringHello(r randyHello) string {
+	v1 := r.Intn(100)
+	tmps := make([]rune, v1)
+	for i := 0; i < v1; i++ {
+		tmps[i] = randUTF8RuneHello(r)
+	}
+	return string(tmps)
+}
+func randUnrecognizedHello(r randyHello, maxFieldNumber int) (dAtA []byte) {
+	l := r.Intn(5)
+	for i := 0; i < l; i++ {
+		wire := r.Intn(4)
+		if wire == 3 {
+			wire = 5
+		}
+		fieldNumber := maxFieldNumber + r.Intn(100)
+		dAtA = randFieldHello(dAtA, r, fieldNumber, wire)
+	}
+	return dAtA
+}
+func randFieldHello(dAtA []byte, r randyHello, fieldNumber int, wire int) []byte {
+	key := uint32(fieldNumber)<<3 | uint32(wire)
+	switch wire {
+	case 0:
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(key))
+		v2 := r.Int63()
+		if r.Intn(2) == 0 {
+			v2 *= -1
+		}
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(v2))
+	case 1:
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	case 2:
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(key))
+		ll := r.Intn(100)
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(ll))
+		for j := 0; j < ll; j++ {
+			dAtA = append(dAtA, byte(r.Intn(256)))
+		}
+	default:
+		dAtA = encodeVarintPopulateHello(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	}
+	return dAtA
+}
+func encodeVarintPopulateHello(dAtA []byte, v uint64) []byte {
+	for v >= 1<<7 {
+		dAtA = append(dAtA, uint8(uint64(v)&0x7f|0x80))
+		v >>= 7
+	}
+	dAtA = append(dAtA, uint8(v))
+	return dAtA
+}
 func (m *HelloRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -238,6 +405,34 @@ func sovHello(x uint64) (n int) {
 }
 func sozHello(x uint64) (n int) {
 	return sovHello(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *HelloRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&HelloRequest{`,
+		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *HelloReply) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&HelloReply{`,
+		`Message:` + fmt.Sprintf("%v", this.Message) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func valueToStringHello(v interface{}) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("*%v", pv)
 }
 func (m *HelloRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

@@ -12,11 +12,13 @@ import (
 	"github.com/zhufuyi/grpc_examples/include"
 	"github.com/zhufuyi/grpc_examples/swagger"
 
+	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -84,32 +86,57 @@ func grpcServer() {
 	}
 }
 
-// web服务
-func webServer() {
+func rpcGateway() (*runtime.ServeMux, error) {
 	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
 
-	gwMux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(runtime.DefaultHeaderMatcher),
+		runtime.WithMarshalerOption(
+			runtime.MIMEWildcard,
+			&runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					UseEnumNumbers:  false,
+					EmitUnpopulated: true,
+					UseProtoNames:   true,
+				},
+			},
+		),
+	)
+
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())} // 这里的option和rpc的client正常调用一致
-	err := pb.RegisterUserServiceHandlerFromEndpoint(ctx, gwMux, grpcAddr, opts)
+
+	// 根据实际情况填写
+	err := pb.RegisterUserServiceHandlerFromEndpoint(ctx, mux, grpcAddr, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return mux, nil
+}
+
+func webServer() {
+	mux, err := rpcGateway()
 	if err != nil {
 		panic(err)
 	}
 
-	mux := http.NewServeMux()
-	// 注册rpc服务的api接口路由
-	mux.Handle("/", gwMux)
+	r := gin.Default()
 
-	// 注册swagger路由
-	prefixPath := "/http2grpc/"
-	router := swagger.Router(prefixPath, include.Path("../http2grpc/proto/pb/user.swagger.json"))
-	mux.Handle(prefixPath, router) // 必须以/结尾的路径
+	r.POST("/api/v1/*any", gin.WrapF(mux.ServeHTTP))
+	r.DELETE("/api/v1/*any", gin.WrapF(mux.ServeHTTP))
+	r.PUT("/api/v1/*any", gin.WrapF(mux.ServeHTTP))
+	r.GET("/api/v1/*any", gin.WrapF(mux.ServeHTTP))
+	swagger.Handler(r, include.Path("../http2grpc/proto/pb/user.swagger.json"))
 
 	fmt.Println("start up web server ", webAddr)
-	err = http.ListenAndServe(webAddr, mux)
-	if err != nil {
-		panic(err)
+	server := &http.Server{
+		Addr:           webAddr,
+		Handler:        r,
+		MaxHeaderBytes: 1 << 20,
+	}
+
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		panic(fmt.Errorf("listen server error: %v", err))
 	}
 }
 

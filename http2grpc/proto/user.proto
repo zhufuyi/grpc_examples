@@ -13,8 +13,11 @@ option go_package = "./pb;pb";
 
 // 生成*.swagger.json文件的一些默认设置
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8282"
+  base_path: ""
   info: {
-    version: "2.0";
+    title: "user api docs";
+    version: "v0.0.0";
   };
   // 显示扩展文档
   external_docs: {
@@ -24,7 +27,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   // 默认为HTTPS，根据实际需要设置
   schemes: HTTP;
   schemes: HTTPS;
-
   consumes: "application/json";
   produces: "application/json";
 };
@@ -34,7 +36,7 @@ service UserService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
     // http设置
     option (google.api.http) = {
-      post: "/v1/user"
+      post: "/api/v1/user"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -47,7 +49,7 @@ service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserReply) {
     // http设置
     option (google.api.http) = {
-      get: "/v1/user/{id}"
+      get: "/api/v1/user/{id}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "获取用户详情",

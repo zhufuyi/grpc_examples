@@ -7,6 +7,11 @@ import "gogo/protobuf/gogoproto/gogo.proto";
 // userpb是生成代码的包名称，必须包含.或/字符，最后字符为包名
 option go_package = "./hellopb";
 
+// 生成测试文件
+option (gogoproto.testgen_all) = true;
+option (gogoproto.populate_all) = true;
+option (gogoproto.benchgen_all) = true;
+
 service Greeter {
     rpc SayHello (HelloRequest) returns (HelloReply) {}
 }

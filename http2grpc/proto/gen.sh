@@ -8,7 +8,7 @@
 # protoc-gen-openapiv2        v2.10.0
 
 # 服务名称
-serverName="account"
+serverName="user"
 
 outPath="pb"  # 和proto文件的go_package名称一致，也就是文件夹名和包名一致
 mkdir -p ${outPath}
