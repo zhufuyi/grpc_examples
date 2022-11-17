@@ -62,7 +62,7 @@ func getDialOptions(isUseTLS bool) []grpc.DialOption {
 func main() {
 	isUseTLS = true // 设置是否需要TLS加密
 
-	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions(isUseTLS)...)
+	conn, err := grpc.Dial("127.0.0.1:8282", getDialOptions(isUseTLS)...)
 	if err != nil {
 		panic(err)
 	}

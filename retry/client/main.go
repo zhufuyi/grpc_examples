@@ -14,7 +14,7 @@ import (
 )
 
 func sayHello(client pb.GreeterClient) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second) //nolint
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	resp, err := client.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
@@ -29,7 +29,7 @@ func sayHello(client pb.GreeterClient) error {
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁用tls
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// 重试
@@ -44,7 +44,7 @@ func getDialOptions() []grpc.DialOption {
 }
 
 func main() {
-	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	conn, err := grpc.Dial("127.0.0.1:8282", getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}

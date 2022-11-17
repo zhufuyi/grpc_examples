@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	webAddr  = "127.0.0.1:9090"
-	grpcAddr = "127.0.0.1:8080"
+	webAddr  = "127.0.0.1:8080"
+	grpcAddr = "127.0.0.1:8282"
 )
 
 var isUseTLS bool // 是否开启TLS加密

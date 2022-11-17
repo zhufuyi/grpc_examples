@@ -41,7 +41,7 @@ func defaultDefaultServer(addr string) {
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁用tls
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// default Metrics
@@ -56,12 +56,12 @@ func getDialOptions() []grpc.DialOption {
 
 func main() {
 	grpc_prometheus.EnableHandlingTimeHistogram()
-	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	conn, err := grpc.Dial("127.0.0.1:8282", getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}
 
-	defaultDefaultServer(":9094")
+	defaultDefaultServer(":8284")
 
 	client := pb.NewGreeterClient(conn)
 	i := 0

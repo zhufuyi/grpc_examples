@@ -63,7 +63,7 @@ func getServerOptions() []grpc.ServerOption {
 }
 
 func main() {
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	list, err := net.Listen("tcp", addr)

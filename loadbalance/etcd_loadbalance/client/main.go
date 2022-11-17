@@ -7,10 +7,11 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
+	"github.com/zhufuyi/pkg/etcdcli"
+	"github.com/zhufuyi/pkg/servicerd/discovery"
+	"github.com/zhufuyi/pkg/servicerd/registry/etcd"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/resolver"
 )
 
 const serverName = "hello-demo"
@@ -30,7 +31,10 @@ func sayHello(client pb.GreeterClient) error {
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁止tls加密
+	// 使用etcd服务发现
+	options = append(options, discoveryEtcd())
+
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// 负载均衡策略，轮询，https://github.com/grpc/grpc-go/tree/master/examples/features/load_balancing 和 https://github.com/grpc/grpc/blob/master/doc/service_config.md
@@ -39,12 +43,24 @@ func getDialOptions() []grpc.DialOption {
 	return options
 }
 
-func main() {
-	// 使用etcd服务发现
-	r := discovery.NewResolver(etcdAddrs)
-	resolver.Register(r)
+func discoveryEtcd() grpc.DialOption {
+	cli, err := etcdcli.Init(etcdAddrs, etcdcli.WithDialTimeout(time.Second*5))
+	if err != nil {
+		panic(fmt.Sprintf("etcdcli.Init error: %v, addr: %v", err, etcdAddrs))
+	}
+	iDiscovery := etcd.New(cli)
 
-	conn, err := grpc.Dial("etcd:///"+serverName, getDialOptions()...)
+	return grpc.WithResolvers(
+		discovery.NewBuilder(
+			iDiscovery,
+			discovery.WithInsecure(false),
+		))
+}
+
+func main() {
+	endpoint := "discovery:///" + serverName // 通过服务名称连接grpc服务
+
+	conn, err := grpc.Dial(endpoint, getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}

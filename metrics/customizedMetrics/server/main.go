@@ -94,7 +94,7 @@ func getServerOptions() []grpc.ServerOption {
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	list, err := net.Listen("tcp", addr)
@@ -106,8 +106,9 @@ func main() {
 	pb.RegisterGreeterServer(server, &greeterServer{})
 
 	// 启动metrics服务器，默认采集grpc指标，开启、go指标
-	metrics.GoHTTPService(":9092", server)
-	fmt.Println("start metrics server", ":9092")
+	metricsAddr := ":8283"
+	metrics.GoHTTPService(metricsAddr, server)
+	fmt.Println("start metrics server " + metricsAddr)
 
 	err = server.Serve(list)
 	if err != nil {

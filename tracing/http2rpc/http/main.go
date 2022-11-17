@@ -14,10 +14,10 @@ import (
 
 var (
 	// web addr
-	webAddr = ":9090"
+	webAddr = ":8080"
 
 	// rpc addr
-	rpcAddr = "127.0.0.1:8080"
+	rpcAddr = "127.0.0.1:8282"
 
 	serviceName = "hello-client"
 )

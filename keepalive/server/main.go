@@ -20,7 +20,7 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 }
 
 func main() {
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	var options []grpc.ServerOption

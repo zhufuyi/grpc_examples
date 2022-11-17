@@ -40,7 +40,7 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁用tls加密
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// tracing跟踪
@@ -77,9 +77,9 @@ func main() {
 	defer tracer.Close(context.Background()) //nolint
 
 	// 连接server2
-	connectRPCServer("127.0.0.1:8081")
+	connectRPCServer("127.0.0.1:8282")
 
-	addr := ":8080"
+	addr := ":8482"
 	fmt.Println("start rpc server", addr)
 
 	// 监听TCP端口

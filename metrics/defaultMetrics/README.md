@@ -82,7 +82,7 @@ promhttp_metric_handler_requests_total{code="503"} 0
           env: 'dev'
 ``` 
 
-Request the prometheus api `curl -X POST http://localhost:9090/-/reload` to make the configuration take effect.
+Request the prometheus api `curl -X POST http://localhost:8080/-/reload` to make the configuration take effect.
 
 <br>
 

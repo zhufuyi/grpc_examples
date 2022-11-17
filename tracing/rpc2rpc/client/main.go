@@ -27,7 +27,7 @@ func sayHello(client pb.GreeterClient) error {
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁用tls加密
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// tracing跟踪
@@ -42,7 +42,7 @@ func main() {
 	tracing.InitTrace("hello-client")
 	defer tracer.Close(context.Background()) //nolint
 
-	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	conn, err := grpc.Dial("127.0.0.1:8482", getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}

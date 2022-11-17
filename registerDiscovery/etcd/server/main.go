@@ -12,19 +12,17 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/registry"
-	"github.com/zhufuyi/pkg/registry/etcd"
-	clientv3 "go.etcd.io/etcd/client/v3"
+	"github.com/zhufuyi/pkg/servicerd/registry"
+	"github.com/zhufuyi/pkg/servicerd/registry/etcd"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
-	serverName = "hello-demo"
+	serverName = "helloDemo"
 )
 
 var (
-	grpcPort  = "8080"
+	grpcPort  = "8282"
 	etcdAddrs = []string{"192.168.3.37:2379"}
 )
 
@@ -56,43 +54,37 @@ func startServer(addr string) {
 	}
 }
 
-func getETCDRegistry(etcdEndpoints []string, instanceName string, instanceEndpoints []string) (registry.Registry, *registry.ServiceInstance) {
-	serviceInstance := registry.NewServiceInstance(instanceName, instanceEndpoints)
-
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   etcdEndpoints,
-		DialTimeout: 5 * time.Second,
-		DialOptions: []grpc.DialOption{
-			grpc.WithBlock(),
-			grpc.WithTransportCredentials(insecure.NewCredentials()),
-		},
-	})
+func registryEtcd(rpcAddr string) (registry.Registry, *registry.ServiceInstance) {
+	iRegistry, instance, err := etcd.NewRegistry(
+		etcdAddrs,
+		serverName+"_grpc",
+		serverName,
+		[]string{"grpc://" + rpcAddr},
+	)
 	if err != nil {
 		panic(err)
 	}
-	iRegistry := etcd.New(cli)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second) //nolint
+	if err = iRegistry.Register(ctx, instance); err != nil {
+		panic(err)
+	}
 
-	return iRegistry, serviceInstance
+	return iRegistry, instance
 }
 
 func main() {
-	flag.StringVar(&grpcPort, "p", "8080", "grpc listen port")
+	flag.StringVar(&grpcPort, "p", "8282", "grpc listen port")
 	flag.Parse()
 	grpcAddr := "127.0.0.1:" + grpcPort
+
+	// 注册服务到etcd
+	iRegistry, instance := registryEtcd(grpcAddr)
 
 	// 运行rpc服务
 	go startServer(grpcAddr)
 
-	// 注册服务到etcd
-	iRegistry, serviceInstance := getETCDRegistry(etcdAddrs, serverName, []string{"grpc://" + grpcAddr})
-	ctx, _ := context.WithTimeout(context.Background(), 3*time.Second) //nolint
-	if err := iRegistry.Register(ctx, serviceInstance); err != nil {
-		panic(err)
-	}
-
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	<-c
-	ctx, _ = context.WithTimeout(context.Background(), 3*time.Second) //nolint
-	_ = iRegistry.Deregister(ctx, serviceInstance)
+	_ = iRegistry.Deregister(context.Background(), instance)
 }

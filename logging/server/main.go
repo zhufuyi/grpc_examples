@@ -41,7 +41,7 @@ func getServerOptions() []grpc.ServerOption {
 func main() {
 	logger, _ = zap.NewProduction()
 
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	// 监听TCP端口

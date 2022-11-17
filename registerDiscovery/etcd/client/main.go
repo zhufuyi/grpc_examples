@@ -7,16 +7,14 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/grpccli"
-	"github.com/zhufuyi/pkg/logger"
-	"github.com/zhufuyi/pkg/registry"
-	"github.com/zhufuyi/pkg/registry/etcd"
-	clientv3 "go.etcd.io/etcd/client/v3"
+	"github.com/zhufuyi/pkg/etcdcli"
+	"github.com/zhufuyi/pkg/servicerd/discovery"
+	"github.com/zhufuyi/pkg/servicerd/registry/etcd"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const serverName = "hello-demo"
+const serverName = "helloDemo"
 
 var etcdAddrs = []string{"192.168.3.37:2379"}
 
@@ -30,30 +28,37 @@ func sayHello(client pb.GreeterClient) error {
 	return nil
 }
 
-func discoveryETCD(endpoints []string) registry.Discovery {
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   endpoints,
-		DialTimeout: 10 * time.Second,
-		DialOptions: []grpc.DialOption{
-			grpc.WithBlock(),
-			grpc.WithTransportCredentials(insecure.NewCredentials()),
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
+func getDialOptions() []grpc.DialOption {
+	var options []grpc.DialOption
 
-	return etcd.New(cli)
+	// 使用etcd服务发现
+	options = append(options, discoveryEtcd())
+
+	// 使用不安全传输
+	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	return options
+}
+
+func discoveryEtcd() grpc.DialOption {
+	cli, err := etcdcli.Init(etcdAddrs, etcdcli.WithDialTimeout(time.Second*5))
+	if err != nil {
+		panic(fmt.Sprintf("etcdcli.Init error: %v, addr: %v", err, etcdAddrs))
+	}
+	iDiscovery := etcd.New(cli)
+
+	return grpc.WithResolvers(
+		discovery.NewBuilder(
+			iDiscovery,
+			discovery.WithInsecure(true),
+		))
 }
 
 func main() {
-	endpoint := "discovery:///" + serverName
-	iDiscovery := discoveryETCD(etcdAddrs)
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*3) //nolint
-	conn, err := grpccli.DialInsecure(ctx, endpoint,
-		grpccli.WithEnableLog(logger.Get()),
-		grpccli.WithDiscovery(iDiscovery),
-	)
+	endpoint := "discovery:///" + serverName // 通过服务名称连接grpc服务
+	//endpoint := "127.0.0.1:8282"
+
+	conn, err := grpc.Dial(endpoint, getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}

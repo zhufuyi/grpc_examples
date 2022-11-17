@@ -104,7 +104,7 @@ func bidirectionalStreamingSayHello(client pb.GreeterClient) error {
 }
 
 func main() {
-	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("127.0.0.1:8282", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}

@@ -59,7 +59,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	conn, err := grpc.Dial("127.0.0.1:8080", options...)
+	conn, err := grpc.Dial("127.0.0.1:8282", options...)
 	if err != nil {
 		panic(err)
 	}

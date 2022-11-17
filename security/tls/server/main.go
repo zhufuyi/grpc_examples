@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// 监听TCP端口
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 	list, err := net.Listen("tcp", addr)
 	if err != nil {

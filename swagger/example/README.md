@@ -6,7 +6,7 @@
 
 start server `go run main.go`
 
-open a browser and type in the address `http://127.0.0.1:9090/swagger/index.html`.
+open a browser and type in the address `http://127.0.0.1:8080/swagger/index.html`.
 
 <br>
 
@@ -17,4 +17,4 @@ open a browser and type in the address `http://127.0.0.1:9090/swagger/index.html
 -v share json file to container/openapiv2 directory
 -e SWAGGER_JSON specify json file
 
-open a browser and type in the address `http://127.0.0.1:9090`.
+open a browser and type in the address `http://127.0.0.1:8080`.

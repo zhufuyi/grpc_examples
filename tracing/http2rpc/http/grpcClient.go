@@ -16,7 +16,7 @@ var helloClient pb.GreeterClient
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁用tls加密
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// tracing跟踪

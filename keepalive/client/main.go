@@ -25,7 +25,7 @@ func sayHello(client pb.GreeterClient) error {
 func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
-	// 禁止tls加密
+	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	// keepalive option
@@ -35,7 +35,7 @@ func getDialOptions() []grpc.DialOption {
 }
 
 func main() {
-	conn, err := grpc.Dial("127.0.0.1:8080", getDialOptions()...)
+	conn, err := grpc.Dial("127.0.0.1:8282", getDialOptions()...)
 	if err != nil {
 		panic(err)
 	}

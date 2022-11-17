@@ -44,7 +44,7 @@ func main() {
 	tracing.InitTrace("hello-server2")
 	defer tracer.Close(context.Background()) //nolint
 
-	addr := ":8081"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	// 监听TCP端口

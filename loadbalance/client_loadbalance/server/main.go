@@ -40,7 +40,7 @@ func startServer(addr string) {
 }
 
 func main() {
-	addrs := []string{":8080", ":8081", ":8082"}
+	addrs := []string{":8282", ":8482", ":8682"}
 
 	var wg sync.WaitGroup
 	for _, addr := range addrs {

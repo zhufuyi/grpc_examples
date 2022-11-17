@@ -8,7 +8,7 @@ import (
 	"github.com/zhufuyi/grpc_examples/swagger"
 )
 
-var swaggerAddr = ":9090"
+var swaggerAddr = ":8080"
 
 func main() {
 	router := swagger.Router("/", include.Path("../swagger/example/proto/hellopb/hello.swagger.json"))

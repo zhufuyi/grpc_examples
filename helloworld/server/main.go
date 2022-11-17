@@ -108,7 +108,7 @@ func (g *greeterServer) BidirectionalStreamingSayHello(stream pb.Greeter_Bidirec
 }
 
 func main() {
-	addr := ":8080"
+	addr := ":8282"
 	fmt.Println("start rpc server", addr)
 
 	// 监听TCP端口

@@ -7,10 +7,12 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	pb "github.com/zhufuyi/grpc_examples/loadbalance/etcd_loadbalance/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/etcd/discovery"
+	"github.com/zhufuyi/pkg/servicerd/registry"
+	"github.com/zhufuyi/pkg/servicerd/registry/etcd"
 	"google.golang.org/grpc"
 )
 
@@ -50,16 +52,35 @@ func startServer(addr string) {
 	}
 }
 
+func registryEtcd(rpcAddr string) (registry.Registry, *registry.ServiceInstance) {
+	iRegistry, instance, err := etcd.NewRegistry(
+		etcdAddrs,
+		serverName+"_grpc_"+rpcAddr,
+		serverName,
+		[]string{rpcAddr},
+	)
+	if err != nil {
+		panic(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second) //nolint
+	if err = iRegistry.Register(ctx, instance); err != nil {
+		panic(err)
+	}
+
+	return iRegistry, instance
+}
+
 func main() {
-	grpcAddrs := []string{"127.0.0.1:8080", "127.0.0.1:8081", "127.0.0.1:8082"}
+	grpcAddrs := []string{"grpc://127.0.0.1:8282", "grpc://127.0.0.1:8482", "grpc://127.0.0.1:8682"}
 
 	for i := 0; i < len(grpcAddrs); i++ {
 		// 启动rpc服务
 		go startServer(grpcAddrs[i])
 
-		// 注册服务到etcd
-		etcdRegister := discovery.RegisterRPCAddr(serverName, grpcAddrs[i], etcdAddrs)
-		defer etcdRegister.Stop()
+		iRegistry, instance := registryEtcd(grpcAddrs[i])
+		defer func() {
+			_ = iRegistry.Deregister(context.Background(), instance)
+		}()
 	}
 
 	c := make(chan os.Signal, 1)
