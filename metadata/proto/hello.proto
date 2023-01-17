@@ -6,6 +6,7 @@ option go_package = "./hellopb";
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc DiscussHello (stream HelloRequest) returns (stream HelloReply) {}
 }
 
 message HelloRequest {
