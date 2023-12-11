@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/zhufuyi/grpc_examples/tracing"
-	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/tracing/rpc2rpc"
+	pb "github.com/zhufuyi/grpc_examples/tracing/rpc2rpc/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/interceptor"
-	"github.com/zhufuyi/pkg/tracer"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/tracer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -39,7 +39,7 @@ func getDialOptions() []grpc.DialOption {
 }
 
 func main() {
-	tracing.InitTrace("hello-client")
+	rpc2rpc.InitTrace("hello-client")
 	defer tracer.Close(context.Background()) //nolint
 
 	conn, err := grpc.Dial("127.0.0.1:8482", getDialOptions()...)

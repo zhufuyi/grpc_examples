@@ -61,7 +61,7 @@ func main() {
 		panic(err)
 	}
 
-	defaultDefaultServer(":8284")
+	defaultDefaultServer(":8283")
 
 	client := pb.NewGreeterClient(conn)
 	i := 0

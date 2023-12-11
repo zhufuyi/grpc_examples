@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
+	pb "github.com/zhufuyi/grpc_examples/metadata/proto/hellopb"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/zhufuyi/pkg/krand"
+	"github.com/zhufuyi/sponge/pkg/krand"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"

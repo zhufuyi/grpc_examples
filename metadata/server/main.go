@@ -7,11 +7,11 @@ import (
 	"net"
 	"time"
 
-	pb "github.com/zhufuyi/grpc_examples/loadbalance/client_loadbalance/proto/hellopb"
+	pb "github.com/zhufuyi/grpc_examples/metadata/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/zhufuyi/pkg/krand"
+	"github.com/zhufuyi/sponge/pkg/krand"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -96,7 +96,7 @@ func getServerOptions() []grpc.ServerOption {
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
 	list, err := net.Listen("tcp", addr)
 	if err != nil {

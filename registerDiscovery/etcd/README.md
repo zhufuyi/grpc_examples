@@ -1,8 +1,8 @@
 ## GRPC Registration and Discovery Example
 
-### Using
+### Run the etcd service
 
-Script to run the etcd service docker-compose.yml
+Run the etcd service with the script docker-compose.yml
 
 ```yaml
 version: "3"
@@ -28,6 +28,18 @@ services:
       - 2380:2380
     volumes:
       - $PWD/etcd-data:/etcd-data
+
+  etcd-ui:
+    image: deltaprojects/etcdkeeper:latest
+    container_name: etcd-ui
+    restart: always
+    ports:
+      - "12379:8080"
+    environment:
+      # 不是etcd地址
+      HOST: "0.0.0.0"
+    depends_on:
+      - etcd
 ```
 
 Running the standalone etcd service
@@ -36,12 +48,74 @@ Running the standalone etcd service
 
 <br>
 
- Start the rpc service and register the service address with etcd
+### Run the grpc service
 
-> cd server && go run main.go
+Start the grpc service and register the service address with etcd
+
+```bash
+cd server
+go build
+
+# running 2 grpc server
+./server -p 8282
+./server -p 8284
+```
+
+You can see in etcd that there are two services kv
+
+```
+/microservices/helloDemo/helloDemo_grpc_127.0.0.1_8282
+{"id":"helloDemo_grpc_127.0.0.1_8282","name":"helloDemo","version":"","metadata":null,"endpoints":["grpc://127.0.0.1:8282"]}
+
+/microservices/helloDemo/helloDemo_grpc_127.0.0.1_8284
+{"id":"helloDemo_grpc_127.0.0.1_8284","name":"helloDemo","version":"","metadata":null,"endpoints":["grpc://127.0.0.1:8284"]}
+```
 
 <br>
 
-Start the rpc client and discover the rpc service port address by service name
+### Run the grpc client
 
-> cd client && go run main.go
+Start the grpc client and discover the grpc service address by service name.
+
+```bash
+cd client
+go build
+
+./client
+```
+
+You can see the polling requesting two services.
+
+```
+hello foo, (from 127.0.0.1:8284)
+hello foo, (from 127.0.0.1:8282)
+hello foo, (from 127.0.0.1:8284)
+hello foo, (from 127.0.0.1:8282)
+......
+```
+
+<br>
+
+### Test service registration and discovery
+
+Test stopping and starting the grpc service to check that service registration and discovery is dynamically aware.
+
+1. Stop the grpc service on port 8282
+
+You can see that the grpc service on port 8282 is detected as offline, and only the service on port 8284 is shown as responsive on the client.
+
+```
+[resolver] update instances: [{"id":"helloDemo_grpc_127.0.0.1_8284","name":"helloDemo","version":"","metadata":null,"endpoints":["grpc://127.0.0.1:8284"]}]
+```
+
+2. Start the gprc service on port 8282
+
+```bash
+./server -p 8282
+```
+
+You can see that two services are detected as running, and it reverts back to polling for grpc services.
+
+```
+[resolver] update instances: [{"id":"helloDemo_grpc_127.0.0.1_8282","name":"helloDemo","version":"","metadata":null,"endpoints":["grpc://127.0.0.1:8282"]},{"id":"helloDemo_grpc_127.0.0.1_8284","name":"helloDemo","version":"","metadata":null,"endpoints":["grpc://127.0.0.1:8284"]}]
+```

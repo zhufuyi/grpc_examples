@@ -6,11 +6,11 @@ import (
 	"net"
 	"time"
 
-	"github.com/zhufuyi/grpc_examples/tracing"
-	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
+	"github.com/zhufuyi/grpc_examples/tracing/rpc2rpc"
+	pb "github.com/zhufuyi/grpc_examples/tracing/rpc2rpc/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/interceptor"
-	"github.com/zhufuyi/pkg/tracer"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/tracer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -32,7 +32,7 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 	resp2 := &pb.HelloReply{Message: resp.Message + ", hello " + r.Name}
 	fmt.Printf("resp: %s\n", resp2.Message)
 
-	tracing.SpanDemo(ctx, "sayHello") // 模拟创建一个span
+	rpc2rpc.SpanDemo(ctx, "sayHello") // 模拟创建一个span
 
 	return resp2, nil
 }
@@ -73,28 +73,28 @@ func getServerOptions() []grpc.ServerOption {
 }
 
 func main() {
-	tracing.InitTrace("hello-server1")
+	rpc2rpc.InitTrace("hello-server1")
 	defer tracer.Close(context.Background()) //nolint
 
 	// 连接server2
 	connectRPCServer("127.0.0.1:8282")
 
 	addr := ":8482"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
-	// 监听TCP端口
+	// listening on TCP port
 	list, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// 创建grpc server对象，拦截器可以在这里注入
+	// create a grpc server object where interceptors can be injected
 	server := grpc.NewServer(getServerOptions()...)
 
-	// grpc的server内部服务和路由
+	// register greeterServer to the server
 	pb.RegisterGreeterServer(server, &greeterServer{})
 
-	// 调用服务器执行阻塞等待客户端
+	// start the server
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

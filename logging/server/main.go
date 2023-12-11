@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/zhufuyi/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
 
 	pb "github.com/zhufuyi/grpc_examples/logging/proto/hellopb"
 
@@ -31,7 +31,6 @@ func getServerOptions() []grpc.ServerOption {
 	//middleware.AddLoggingFields(map[string]interface{}{"hello": "world"}) // 添加打印自定义字段
 	//middleware.AddSkipLoggingMethods("/proto.Greeter/SayHello") // 跳过打印调用的方法
 	options = append(options, grpc_middleware.WithUnaryServerChain(
-		interceptor.UnaryServerCtxTags(),
 		interceptor.UnaryServerLog(logger),
 	))
 
@@ -42,21 +41,21 @@ func main() {
 	logger, _ = zap.NewProduction()
 
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
-	// 监听TCP端口
+	// listening on TCP port
 	list, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// 创建grpc server对象，拦截器可以在这里注入
+	// create a grpc server object where interceptors can be injected
 	server := grpc.NewServer(getServerOptions()...)
 
-	// grpc的server内部服务和路由
+	// register greeterServer to the server
 	pb.RegisterGreeterServer(server, &greeterServer{})
 
-	// 调用服务器执行阻塞等待客户端
+	// start the server
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

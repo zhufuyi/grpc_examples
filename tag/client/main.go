@@ -28,7 +28,7 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	if err := sayHello(client); err != nil {
+	if err = sayHello(client); err != nil {
 		fmt.Println(err)
 	}
 }

@@ -7,8 +7,8 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/gtls"
-	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 )
 
@@ -23,7 +23,7 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 
 func main() {
 	// 单向认证(服务端认证)
-	//credentials, err := gtls.GetServerTLSCredentials(certfile.Path("/one-way/server.crt"), certfile.Path("/one-way/server.key"))
+	//credentials, err := gtls.GetServerTLSCredentials(certfile.Path("one-way/server.crt"), certfile.Path("one-way/server.key"))
 	// 双向认证
 	credentials, err := gtls.GetServerTLSCredentialsByCA(
 		certfile.Path("two-way/ca.pem"),
@@ -39,21 +39,21 @@ func main() {
 		grpc.Creds(credentials),
 	}
 
-	// 监听TCP端口
+	// listening on TCP port
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 	list, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// 创建grpc server对象，拦截器可以在这里注入
+	// create a grpc server object where interceptors can be injected
 	server := grpc.NewServer(opts...)
 
-	// grpc的server内部服务和路由
+	// register greeterServer to the server
 	pb.RegisterGreeterServer(server, &greeterServer{})
 
-	// 调用服务器执行阻塞等待客户端
+	// start the server
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

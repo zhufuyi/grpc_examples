@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	pb "github.com/zhufuyi/grpc_examples/breaker/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/zhufuyi/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,6 +21,17 @@ func sayHello(client pb.GreeterClient) error {
 
 	fmt.Println(resp.Message)
 	return nil
+}
+
+func mockBreaker(conn *grpc.ClientConn) error {
+	errStr := ""
+	for i := 0; i < 20; i++ {
+		err := conn.Invoke(context.Background(), "/mock_unknown_path", &pb.HelloRequest{}, &pb.HelloReply{})
+		if err != nil {
+			errStr = err.Error()
+		}
+	}
+	return errors.New(errStr)
 }
 
 func getDialOptions() []grpc.DialOption {
@@ -47,7 +59,11 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	if err := sayHello(client); err != nil {
+	if err = sayHello(client); err != nil {
+		fmt.Println(err)
+	}
+
+	if err = mockBreaker(conn); err != nil {
 		fmt.Println(err)
 	}
 }

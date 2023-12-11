@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/zhufuyi/grpc_examples/tracing"
+	"github.com/zhufuyi/grpc_examples/tracing/http2rpc"
 	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
 
 	"github.com/gin-gonic/gin"
-	"github.com/zhufuyi/pkg/gin/middleware"
-	"github.com/zhufuyi/pkg/tracer"
+	"github.com/zhufuyi/sponge/pkg/gin/middleware"
+	"github.com/zhufuyi/sponge/pkg/tracer"
 )
 
 var (

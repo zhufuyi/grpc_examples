@@ -24,7 +24,7 @@ func (g *accountServer) Login(ctx context.Context, r *pb.LoginRequest) (*pb.Logi
 		return nil, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	token := fmt.Sprintf("%s_%s", time.Now().Format("2006-01-02T15:04:05.000000"), r.Email)
+	token := fmt.Sprintf("%s_%s", time.Now().Format("2006-01-02T15:04:05.000"), r.Email)
 	return &pb.LoginReply{Token: token}, nil
 }
 
@@ -38,21 +38,21 @@ func getServerOptions() []grpc.ServerOption {
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
-	// 监听TCP端口
+	// listening on TCP port
 	list, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// 创建grpc server对象，拦截器可以在这里注入
+	// create a grpc server object where interceptors can be injected
 	server := grpc.NewServer(getServerOptions()...)
 
-	// grpc的server内部服务和路由
+	// register greeterServer to the server
 	pb.RegisterAccountServer(server, &accountServer{})
 
-	// 调用服务器执行阻塞等待客户端
+	// start the server
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

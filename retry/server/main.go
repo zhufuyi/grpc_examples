@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-const timestampFormat = "2006-01-02T15:04:05.000000"
+const timestampFormat = "2006-01-02T15:04:05.000"
 
 type greeterServer struct {
 	pb.UnimplementedGreeterServer
@@ -58,7 +58,7 @@ func (s *failingBuilder) maybeFailRequest() error {
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
 	list, err := net.Listen("tcp", addr)
 	if err != nil {

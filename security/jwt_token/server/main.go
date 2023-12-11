@@ -13,11 +13,11 @@ import (
 	"github.com/zhufuyi/grpc_examples/swagger"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/zhufuyi/pkg/grpc/gtls"
-	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
-	"github.com/zhufuyi/pkg/grpc/interceptor"
-	"github.com/zhufuyi/pkg/jwt"
-	"github.com/zhufuyi/pkg/snowflake"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/jwt"
+	"github.com/zhufuyi/sponge/pkg/krand"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	webAddr  = "127.0.0.1:8080"
-	grpcAddr = "127.0.0.1:8282"
+	webAddr  = ":8080"
+	grpcAddr = ":8282"
 )
 
 var isUseTLS bool // 是否开启TLS加密
@@ -73,7 +73,7 @@ func (a *accountServer) Register(ctx context.Context, req *pb.RegisterRequest) (
 	}
 
 	// 生成id
-	id := snowflake.NewID()
+	id := int64(krand.Int())
 
 	// 生成token
 	token, err := jwt.GenerateToken(strconv.FormatInt(id, 10))
@@ -92,7 +92,7 @@ func (a *accountServer) Register(ctx context.Context, req *pb.RegisterRequest) (
 // GetUser 获取用详情，需要鉴权
 func (a *accountServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	//uid := metautils.ExtractIncoming(ctx).Get("uid")            // 这是从header获取
-	tokenInfo, ok := ctx.Value("tokenInfo").(*jwt.CustomClaims) // 从拦截器设置值读取
+	tokenInfo, ok := ctx.Value("tokenInfo").(*jwt.Claims) // 从拦截器ctx读取
 	if !ok {
 		return nil, status.Errorf(codes.Unauthenticated, "not found field 'tokenInfo'")
 	}
@@ -129,14 +129,14 @@ func getServerOptions(isUseTLS bool) []grpc.ServerOption {
 
 	// token鉴权
 	options = append(options, grpc.UnaryInterceptor(interceptor.UnaryServerJwtAuth(
-		interceptor.WithAuthIgnoreMethods("/proto.accountServer/Register"), // 添加忽略token验证的方法
+		interceptor.WithAuthIgnoreMethods("/proto.Account/Register"), // 添加忽略token验证的方法
 	)))
 
 	return options
 }
 
 func grpcServer() {
-	fmt.Println("start rpc server", grpcAddr)
+	fmt.Println("grpc service is running", grpcAddr)
 
 	listen, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
@@ -193,7 +193,7 @@ func webServer() {
 	router := swagger.Router(prefixPath, include.Path("../security/jwt_token/proto/accountpb/account.swagger.json"))
 	mux.Handle(prefixPath, router) // 必须以/结尾的路径
 
-	fmt.Println("start web server ", webAddr)
+	fmt.Println("http service is running", webAddr)
 	if !isUseTLS {
 		err = http.ListenAndServe(webAddr, mux)
 	} else {
@@ -211,8 +211,6 @@ func main() {
 
 	// 初始jwt
 	jwt.Init()
-	// 设置用户id生成器
-	_ = snowflake.Init(1)
 
 	go grpcServer()
 

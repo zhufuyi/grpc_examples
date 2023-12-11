@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/zhufuyi/pkg/grpc/interceptor"
-
 	pb "github.com/zhufuyi/grpc_examples/tracing/http2rpc/proto/hellopb"
 
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

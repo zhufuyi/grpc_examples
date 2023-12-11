@@ -7,9 +7,9 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/registerDiscovery/etcd/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/etcdcli"
-	"github.com/zhufuyi/pkg/servicerd/discovery"
-	"github.com/zhufuyi/pkg/servicerd/registry/etcd"
+	"github.com/zhufuyi/sponge/pkg/etcdcli"
+	"github.com/zhufuyi/sponge/pkg/servicerd/discovery"
+	"github.com/zhufuyi/sponge/pkg/servicerd/registry/etcd"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -32,15 +32,20 @@ func getDialOptions() []grpc.DialOption {
 	var options []grpc.DialOption
 
 	// 使用etcd服务发现
-	options = append(options, discoveryEtcd())
+	options = append(options, discoveryFromEtcd())
 
 	// 使用不安全传输
 	options = append(options, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
+	// 负载均衡策略，轮询方式，文档说明
+	// https://github.com/grpc/grpc-go/tree/master/examples/features/load_balancing
+	// https://github.com/grpc/grpc/blob/master/doc/service_config.md
+	options = append(options, grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`))
+
 	return options
 }
 
-func discoveryEtcd() grpc.DialOption {
+func discoveryFromEtcd() grpc.DialOption {
 	cli, err := etcdcli.Init(etcdAddrs, etcdcli.WithDialTimeout(time.Second*5))
 	if err != nil {
 		panic(fmt.Sprintf("etcdcli.Init error: %v, addr: %v", err, etcdAddrs))
@@ -65,7 +70,10 @@ func main() {
 
 	client := pb.NewGreeterClient(conn)
 
-	if err := sayHello(client); err != nil {
-		fmt.Println(err)
+	for {
+		if err = sayHello(client); err != nil {
+			panic(err)
+		}
+		time.Sleep(time.Second * 2)
 	}
 }

@@ -25,7 +25,7 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
 	list, err := net.Listen("tcp", addr)
 	if err != nil {

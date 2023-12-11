@@ -8,8 +8,8 @@ import (
 	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/zhufuyi/pkg/grpc/gtls"
-	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
@@ -25,6 +25,7 @@ func (g *greeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) 
 
 // CheckToken 检查token
 func CheckToken(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	fmt.Printf("%+v\n", metautils.ExtractIncoming(ctx))
 	appID := metautils.ExtractIncoming(ctx).Get("app_id")
 	appKey := metautils.ExtractIncoming(ctx).Get("app_key")
 	if appID != "grpc" || appKey != "123456" {
@@ -52,7 +53,7 @@ func getServerOptions() []grpc.ServerOption {
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
 	list, err := net.Listen("tcp", addr)
 	if err != nil {

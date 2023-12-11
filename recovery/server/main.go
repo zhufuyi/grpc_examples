@@ -9,9 +9,24 @@ import (
 	pb "github.com/zhufuyi/grpc_examples/recovery/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/zhufuyi/pkg/grpc/interceptor"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
+
+// UnaryServerRecovery recovery unary interceptor
+func UnaryServerRecovery() grpc.UnaryServerInterceptor {
+	// https://pkg.go.dev/github.com/grpc-ecosystem/go-grpc-middleware/recovery
+	customFunc := func(p interface{}) (err error) {
+		return status.Errorf(codes.Internal, "triggered panic: %v", p)
+	}
+	opts := []grpc_recovery.Option{
+		grpc_recovery.WithRecoveryHandler(customFunc),
+	}
+
+	return grpc_recovery.UnaryServerInterceptor(opts...)
+}
 
 type greeterServer struct {
 	pb.UnimplementedGreeterServer
@@ -20,14 +35,14 @@ type greeterServer struct {
 func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.HelloReply, error) {
 	var data []int
 	fmt.Println(data[5]) // 下标越界，触发panic
-	return &pb.HelloReply{Message: time.Now().Format("2006-01-02T15:04:05.000000") + " hello " + r.Name}, nil
+	return &pb.HelloReply{Message: time.Now().Format("2006-01-02T15:04:05.000") + " hello " + r.Name}, nil
 }
 
 func getServerOptions() []grpc.ServerOption {
 	var options []grpc.ServerOption
 
 	recoveryOption := grpc_middleware.WithUnaryServerChain(
-		interceptor.UnaryServerRecovery(),
+		UnaryServerRecovery(),
 	)
 	options = append(options, recoveryOption)
 
@@ -36,21 +51,21 @@ func getServerOptions() []grpc.ServerOption {
 
 func main() {
 	addr := ":8282"
-	fmt.Println("start rpc server", addr)
+	fmt.Println("grpc service is running", addr)
 
-	// 监听TCP端口
+	// listening on TCP port
 	list, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// 创建grpc server对象，拦截器可以在这里注入
+	// create a grpc server object where interceptors can be injected
 	server := grpc.NewServer(getServerOptions()...)
 
-	// grpc的server内部服务和路由
+	// register greeterServer to the server
 	pb.RegisterGreeterServer(server, &greeterServer{})
 
-	// 调用服务器执行阻塞等待客户端
+	// start the server
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

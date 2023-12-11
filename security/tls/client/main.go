@@ -7,8 +7,8 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/security/tls/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/gtls"
-	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 )
 
@@ -27,7 +27,7 @@ func sayHello(client pb.GreeterClient) error {
 
 func main() {
 	// 单向认证
-	//credentials, err := gtls.GetClientTLSCredentials("localhost", certfile.Path("/one-way/server.crt"))
+	//credentials, err := gtls.GetClientTLSCredentials("localhost", certfile.Path("one-way/server.crt"))
 	// 双向认证
 	credentials, err := gtls.GetClientTLSCredentialsByCA(
 		"localhost",

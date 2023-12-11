@@ -2,11 +2,14 @@
 
 ### Using
 
-(1) Start the grpc server `go run main.go`
+Start the grpc server `go run main.go`
 
-(2) test grpc client `go run main.go`, output id value and token value
+1. test grpc client `go run main.go`, output id value and token value
 
-(3) open a browser and type in the address `https://127.0.0.1:8080/token/swagger/index.html`, if set isUseTLS=false, use `http`.
+2. test http request. 
+
+- if set isUseTLS=true, visit `https://127.0.0.1:8080/token/swagger/index.html`
+- if set isUseTLS=false, visit `http://127.0.0.1:8080/token/swagger/index.html`
 
 request `/v1/user/register`in swagger, response result:
 

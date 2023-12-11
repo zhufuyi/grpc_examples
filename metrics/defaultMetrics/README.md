@@ -2,9 +2,9 @@
 
 ### Start up grpc server and client
 
-Start rpc server and client, metrics service port `9092` for rpc server, metrics service port `9094` for rpc client.
+Start grpc server and client, metrics service port `8282` for rpc server, metrics service port `8283` for rpc client.
 
-Open `http://localhost:9092/metrics` in your browser and the grpc server metrics and go metrics data are as follows.
+Open `http://localhost:8283/metrics` in your browser and the grpc server metrics and go metrics data are as follows.
 
 ```bash
 # HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
@@ -82,7 +82,7 @@ promhttp_metric_handler_requests_total{code="503"} 0
           env: 'dev'
 ``` 
 
-Request the prometheus api `curl -X POST http://localhost:8080/-/reload` to make the configuration take effect.
+Request the prometheus api `curl -X POST http://localhost:9090/-/reload` to make the configuration take effect.
 
 <br>
 

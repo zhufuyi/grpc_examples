@@ -6,8 +6,8 @@ import (
 
 	pb "github.com/zhufuyi/grpc_examples/security/kv_token/proto/hellopb"
 
-	"github.com/zhufuyi/pkg/grpc/gtls"
-	"github.com/zhufuyi/pkg/grpc/gtls/certfile"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
+	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
 	"google.golang.org/grpc"
 )
 

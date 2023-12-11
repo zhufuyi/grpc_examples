@@ -8,7 +8,7 @@ import (
 	pb "github.com/zhufuyi/grpc_examples/retry/proto/hellopb"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/zhufuyi/pkg/grpc/interceptor"
+	"github.com/zhufuyi/sponge/pkg/grpc/interceptor"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

@@ -21,13 +21,15 @@ Uploading information to jaeger via `6831` udp port.
 
 <br>
 
-(2) Start the server2 rpc service
+(2) Set the variables `jaegerAgentHost` and `jaegerAgentPort` in the code file `tracingConfig.go`.
 
-(3) Start server1 rpc service
+(3) Start the server2 rpc service
 
-(4) Run client
+(4) Start server1 rpc service
 
-(5) View link trace information
+(5) Run client
+
+(6) View link trace information
 
 Open jaeger's UI in your browser `http://127.0.0.1:16686`
 
