@@ -2,6 +2,16 @@
 
 Example of adding a custom tag to the message field in a proto
 
+```bash
+# run grpc server
+cd server && go run main.go
+
+# run grpc client
+cd client && go run main.go
+```
+
+<br>
+
 ```protobuf
 message HelloRequest {
     string name = 1 [(gogoproto.moretags) = 'gorm:"name"'];

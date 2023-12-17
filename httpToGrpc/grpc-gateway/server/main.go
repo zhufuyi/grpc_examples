@@ -79,7 +79,7 @@ func grpcServer() {
 	server := grpc.NewServer()
 	pb.RegisterUserServiceServer(server, NewUserServiceServer())
 
-	fmt.Println("start up grpc server ", grpcAddr)
+	fmt.Println("grpc service is running ", grpcAddr)
 	err = server.Serve(list)
 	if err != nil {
 		panic(err)

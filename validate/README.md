@@ -22,3 +22,15 @@ if err != nil {
 <br>
 
 Click for more [constraint rules](proto/constraint_rules.md).
+
+<br>
+
+### Running
+
+```bash
+# run grpc server
+cd server && go run main.go
+
+# run grpc client
+cd client && go run main.go
+```
