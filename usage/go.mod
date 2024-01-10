@@ -1,9 +1,9 @@
-module github.com/zhufuyi/grpc_examples/wrapGrpc
+module github.com/zhufuyi/grpc_examples/usage
 
 go 1.20
 
 require (
-	github.com/zhufuyi/sponge v1.5.11
+	github.com/zhufuyi/sponge v1.5.14
 	google.golang.org/grpc v1.56.3
 	google.golang.org/protobuf v1.30.0
 )

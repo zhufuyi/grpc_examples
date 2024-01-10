@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/zhufuyi/grpc_examples/wrapGrpc/proto/hellopb"
+	pb "github.com/zhufuyi/grpc_examples/usage/proto/hellopb"
 
 	"github.com/zhufuyi/sponge/pkg/grpc/gtls"
 	"github.com/zhufuyi/sponge/pkg/grpc/gtls/certfile"
@@ -73,11 +73,11 @@ func newCredential() credentials.TransportCredentials {
 
 func main() {
 	port := 8282
-	fn := func(s *grpc.Server) {
+	registerFn := func(s *grpc.Server) {
 		pb.RegisterGreeterServer(s, &greeterServer{})
 	}
 
-	server.Run(port, []server.RegisterFn{fn},
+	server.Run(port, registerFn,
 		server.WithSecure(newCredential()),
 		server.WithUnaryInterceptor(newUnaryInterceptors...),
 		// WithStreamInterceptor(streamInterceptors...),

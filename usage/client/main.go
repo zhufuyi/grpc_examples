@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "github.com/zhufuyi/grpc_examples/wrapGrpc/proto/hellopb"
+	pb "github.com/zhufuyi/grpc_examples/usage/proto/hellopb"
 
 	"github.com/zhufuyi/sponge/pkg/etcdcli"
 	"github.com/zhufuyi/sponge/pkg/grpc/client"
