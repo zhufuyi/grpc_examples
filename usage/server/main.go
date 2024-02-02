@@ -25,28 +25,9 @@ func (g *greeterServer) SayHello(ctx context.Context, r *pb.HelloRequest) (*pb.H
 	return &pb.HelloReply{Message: "hello " + r.Name}, nil
 }
 
-var newUnaryInterceptors = []grpc.UnaryServerInterceptor{
-	interceptor.UnaryServerRecovery(),
-	interceptor.UnaryServerLog(logger.Get()),
-}
+// -------------------------------------------------------------------------------------------
 
-var newServiceRegister = func() {
-	instanceEndpoint := fmt.Sprintf("grpc://%s:%d", "127.0.0.1", 8282)
-	iRegistry, instance, err := etcd.NewRegistry(
-		[]string{"192.168.3.37:2379"},
-		"test-id",
-		"hello-demo",
-		[]string{instanceEndpoint},
-	)
-	if err != nil {
-		panic(err)
-	}
-	err = iRegistry.Register(context.Background(), instance)
-	if err != nil {
-		panic(err)
-	}
-}
-
+// grpc server-side transport credentials
 func newCredential() credentials.TransportCredentials {
 	var (
 		credential credentials.TransportCredentials
@@ -71,6 +52,31 @@ func newCredential() credentials.TransportCredentials {
 	return credential
 }
 
+// grpc server-side service register
+var newServiceRegister = func() {
+	instanceEndpoint := fmt.Sprintf("grpc://%s:%d", "127.0.0.1", 8282)
+	// uses etcd for service registration and discovery, also supports consul, nacos
+	iRegistry, instance, err := etcd.NewRegistry(
+		[]string{"192.168.3.37:2379"},
+		"test-id",
+		"hello-demo",
+		[]string{instanceEndpoint},
+	)
+	if err != nil {
+		panic(err)
+	}
+	err = iRegistry.Register(context.Background(), instance)
+	if err != nil {
+		panic(err)
+	}
+}
+
+// grpc server-side interceptors
+var unaryInterceptors = []grpc.UnaryServerInterceptor{
+	interceptor.UnaryServerRecovery(),
+	interceptor.UnaryServerLog(logger.Get()),
+}
+
 func main() {
 	port := 8282
 	registerFn := func(s *grpc.Server) {
@@ -79,8 +85,8 @@ func main() {
 
 	server.Run(port, registerFn,
 		server.WithSecure(newCredential()),
-		server.WithUnaryInterceptor(newUnaryInterceptors...),
-		// WithStreamInterceptor(streamInterceptors...),
+		server.WithUnaryInterceptor(unaryInterceptors...),
+		//server.WithStreamInterceptor(streamInterceptors...),
 		//server.WithServiceRegister(newServiceRegister),
 	)
 	logger.Info("grpc server is running", logger.Int("port", port))

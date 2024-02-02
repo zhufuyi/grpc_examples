@@ -21,12 +21,26 @@ import (
 	"google.golang.org/grpc/resolver"
 )
 
-var newUnaryInterceptors = []grpc.UnaryClientInterceptor{
-	interceptor.UnaryClientRecovery(),
-	interceptor.UnaryClientLog(logger.Get()),
+func sayHello(conn *grpc.ClientConn) {
+	greeterClient := pb.NewGreeterClient(conn)
+
+	for i := 0; i < 100; i++ {
+		time.Sleep(time.Second * 3)
+		reply, err := greeterClient.SayHello(context.Background(), &pb.HelloRequest{
+			Name: fmt.Sprintf("Tom-%d", i),
+		})
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(reply.Message)
+	}
 }
 
+// -------------------------------------------------------------------------------------------
+
+// grpc client-side service discovery
 func newBuilder() resolver.Builder {
+	// uses etcd for service registration and discovery, also supports consul, nacos
 	cli, err := etcdcli.Init([]string{"192.168.3.37:2379"}, etcdcli.WithDialTimeout(time.Second*5))
 	if err != nil {
 		panic(fmt.Sprintf("etcdcli.Init error: %v", err))
@@ -39,6 +53,7 @@ func newBuilder() resolver.Builder {
 	)
 }
 
+// grpc client-side transport credentials
 func newCredential() credentials.TransportCredentials {
 	var (
 		credential credentials.TransportCredentials
@@ -64,32 +79,27 @@ func newCredential() credentials.TransportCredentials {
 	return credential
 }
 
+// grpc client-side interceptors
+var unaryInterceptors = []grpc.UnaryClientInterceptor{
+	interceptor.UnaryClientRecovery(),
+	interceptor.UnaryClientLog(logger.Get()),
+}
+
 func main() {
 	endpoint := "127.0.0.1:8282" // ip direct connection
-	//endpoint = "discovery:///hello-demo" // used when using service discovery
+	//endpoint = "discovery:///hello-demo" // service discovery
 
 	conn, err := client.Dial(context.Background(), endpoint,
 		//client.WithServiceDiscover(newBuilder()),
 		client.WithLoadBalance(),
 		client.WithSecure(newCredential()),
-		client.WithUnaryInterceptor(newUnaryInterceptors...),
-		//WithStreamInterceptor(streamInterceptors...),
+		client.WithUnaryInterceptor(unaryInterceptors...),
+		//client.WithStreamInterceptor(streamInterceptors...),
 	)
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close()
 
-	greeterClient := pb.NewGreeterClient(conn)
-
-	for i := 0; i < 100; i++ {
-		time.Sleep(time.Second * 3)
-		reply, err := greeterClient.SayHello(context.Background(), &pb.HelloRequest{
-			Name: fmt.Sprintf("Tom-%d", i),
-		})
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(reply.Message)
-	}
+	sayHello(conn)
 }
