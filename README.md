@@ -1,6 +1,6 @@
 ## English  | [简体中文](readme-cn.md)
 
-## GRPC Examples
+### GRPC Examples
 
 This is an example of commonly used knowledge in gRPC, very suitable for users who want to learn grpc in a comprehensive and in-depth way. These knowledge points have been applied to the development framework **sponge**.
 
@@ -10,7 +10,9 @@ Github Repo: [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/spon
 
 <br>
 
-### Go Configuration
+### Quick Start
+
+#### Go Configuration
 
 This step can be skipped if go has already been set up.
 
@@ -29,7 +31,7 @@ setx GOBIN "D:\your-directory\bin"   # Set the directory where the executable bi
 
 <br>
 
-### Installation of Protoc and Plugins
+#### Installation of Protoc and Plugins
 
 1. Copy the protobuf file dependency folder [include](include) to the `$GOBIN` directory.
 
@@ -37,7 +39,7 @@ setx GOBIN "D:\your-directory\bin"   # Set the directory where the executable bi
 
 > Download the protoc binaries according to the system type, move the protoc binaries to `$GOBIN`.
 
-3. install protoc plugins
+3. Install Protoc Plugins
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
