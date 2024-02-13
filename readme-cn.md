@@ -1,10 +1,10 @@
 ## GRPC 示例
 
-这是grpc常用的知识点示例，非常适合全面深入学习grpc的用户，这些grpc知识点已经应用到开发项目框架 **sponge** 。
+这是grpc常用的知识点示例，非常适合全面深入学习grpc，这些grpc知识点已经应用到go基础开发框架 **sponge**。
 
-**sponge** 是一个集成了`自动生成代码`、`gin和grpc框架`的开发项目框架。sponge 拥有丰富的生成代码命令，生成不同的功能代码可以组合成完整的服务(类似人为打散的海绵细胞可以自动重组成一个新的海绵)。代码解耦模块化设计，很容易构建出从开发到部署的完整工程项目，开发web或微服务项目轻而易举、事半功倍，使用go也可以"低代码开发"。
+[sponge](https://github.com/zhufuyi/sponge) 是一个集成了`自动生成代码`、`gin和grpc框架`的基础开发框架。代码解耦模块化设计，很容易构建出从开发到部署的完整项目，只需在生成的模板代码上填充具体业务逻辑代码，使用go也可以"低代码开发"。
 
-如果对 sponge 有兴趣了解，点击查看 [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/sponge) 。
+github 地址: [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/sponge)
 
 <br>
 
@@ -29,16 +29,13 @@ setx GOBIN "D:\你的目录\bin"   # 设置 go install 命令编译后生成可�
 
 ### 安装protoc和插件
 
-1. Copy the protobuf file dependency folder [include](include) to the `$GOBIN` directory.
+1. 复制目录 [include](include) 到 `$GOBIN`.
 
-2. Store all the downloaded plugins in `$GOBIN` directory.
+2. 下载protoc地址: [https://github.com/protocolbuffers/protobuf/releases/tag/v25.2](https://github.com/protocolbuffers/protobuf/releases/tag/v25.2)
 
+> 根据系统类型下载对应的protoc二进制文件，并把二进制文件移动到 `$GOBIN`.
 
-3. Download protoc from: [https://github.com/protocolbuffers/protobuf/releases/tag/v25.2](https://github.com/protocolbuffers/protobuf/releases/tag/v25.2)
-
-> Download the protoc binaries according to the system type, move the protoc binaries to `$GOBIN`.
-
-4. install protoc plugins
+3. 安装protoc插件
 
 ```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
