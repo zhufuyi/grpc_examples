@@ -1,9 +1,10 @@
+## [English](README.md)  | 简体中文
 
-### GRPC 示例
+### 使用前说明
 
-这是grpc常用的知识点示例，非常适合全面深入学习grpc，这些grpc知识点已经应用到go基础开发框架 **sponge**。
+这是grpc常用的知识点示例，非常适合全面深入学习和使用grpc，这些grpc知识点是从go开发框架 **sponge** 提取出来的。
 
-[sponge](https://github.com/zhufuyi/sponge) 是一个集成了`自动生成代码`、`gin和grpc框架`的基础开发框架。代码解耦模块化设计，很容易构建出从开发到部署的完整项目，只需在生成的模板代码上填充具体业务逻辑代码，使用go也可以"低代码开发"。
+[sponge](https://github.com/zhufuyi/sponge) 是一个集成了`自动生成代码`、`gin和grpc框架`的强大的开发框架。从生成代码、开发、测试、api文档到部署一站式项目开发，大幅提高了开发效率和降低了开发难度，实现"低代码方式"进行开发项目。
 
 github 地址: [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/sponge)
 

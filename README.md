@@ -1,12 +1,12 @@
 ## English  | [简体中文](readme-cn.md)
 
-### GRPC Examples
+### Description
 
-This is an example of commonly used knowledge in gRPC, very suitable for users who want to learn grpc in a comprehensive and in-depth way. These knowledge points have been applied to the development framework **sponge**.
+This is a collection of commonly used gRPC knowledge points, perfect for comprehensive learning and usage of gRPC. These gRPC knowledge points are extracted from the Go development framework sponge.
 
-[Sponge](https://github.com/zhufuyi/sponge) is a basic development framework that integrates `code auto generation`, `Gin and GRPC framework`. It is easy to build a complete project from development to deployment, just fill in the specific business logic code on the generated template code, the use of Go can also be "low-code development".
+**Sponge** is a powerful development framework that integrates `automatic code generation`, `gin` and `gRPC` frameworks. It greatly improves development efficiency and reduces development difficulty by providing one-stop project development from code generation, development, testing, API documentation to deployment, realizing "low-code" development projects.
 
-Github Repo: [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/sponge) .
+Sponge Repo: [https://github.com/zhufuyi/sponge](https://github.com/zhufuyi/sponge)
 
 <br>
 
